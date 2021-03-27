@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # official tutorial core applications
     'mainsite.catalogue.apps.CatalogueConfig',
     'mainsite.order.apps.OrderConfig',
-
+    'mainsite.offer.apps.OfferConfig',
     # official tutorial dashboard applications
     'mainsite.dashboard.apps.DashboardConfig',
     # 'mainsite.dashboard.orders.apps.OrdersDashboardConfig',
@@ -63,7 +63,8 @@ INSTALLED_APPS = [
     'oscar.apps.partner.apps.PartnerConfig',
     'oscar.apps.basket.apps.BasketConfig',
     'oscar.apps.payment.apps.PaymentConfig',
-    'oscar.apps.offer.apps.OfferConfig',
+
+    # 'oscar.apps.offer.apps.OfferConfig',
     # 'oscar.apps.order.apps.OrderConfig',
     'oscar.apps.customer.apps.CustomerConfig',
     'oscar.apps.search.apps.SearchConfig',

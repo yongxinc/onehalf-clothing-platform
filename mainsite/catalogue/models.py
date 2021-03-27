@@ -7,6 +7,24 @@ from datetime import date
 from django.utils import timezone
 
 
+class sellerApplicationRecord(models.Model):
+    seller = models.CharField(max_length=20)
+    item_id = models.CharField(max_length=20,default='')
+    SIZE_CHOICES = (
+        ('XXS', 'XXS'),
+        ('XS', 'XS'),
+        ('S', 'S'),
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+        ('XXL', 'XXL'))
+    size = models.CharField(max_length=3,
+                            choices=SIZE_CHOICES,
+                            default='XXS')
+    color = models.CharField(max_length=20)
+    quantity = models.IntegerField()
+    status = models.CharField(max_length=50)
+
 class UNIQLOItem(models.Model):
     UpdateDate = models.DateTimeField('更新時間', auto_now=True)
     UNIQLOID = models.CharField(max_length=10)

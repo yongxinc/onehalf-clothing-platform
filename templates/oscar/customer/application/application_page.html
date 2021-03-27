@@ -1,0 +1,21 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+
+<!-- 範例中可以看到Django類別導向的檢視(Class-based Views)預設將查詢結果的物件以object_list傳入樣板中。 -->
+
+
+{% block content %}
+
+<form name='apply' action='/accounts/seller-apply-process' method='POST'>
+    {% csrf_token %}
+   {{ form.as_p }}
+    <input type='submit' value='送出'>
+    <input type='reset' value='清除重填'>
+</form>
+<!-- 
+{% if itemexist %}
+你剛剛輸入了{{uniqlo_id}}
+{% else %}
+哈哈
+{% endif %} -->
+
+{% endblock  %}

@@ -2,25 +2,34 @@
 {% load display_tags %}
 
 <li class="nav-item">
-    <a href="{% url 'customer:profile-view' %}" class="nav-link{% if active_tab == 'profile' %} active{% endif %}">{% trans "Profile" %}</a>
+    <a href="{% url 'customer:profile-view' %}"
+        class="nav-link{% if active_tab == 'profile' %} active{% endif %}">{%trans "Profile" %}</a>
 </li>
 <li class="nav-item">
     <a href="{% url 'customer:order-list' %}" class="nav-link{% if active_tab == 'orders' %} active{% endif %}">{% trans "Order History" %}</a>
 </li>
 <li class="nav-item">
-    <a href="{% url 'customer:address-list' %}" class="nav-link{% if active_tab == 'addresses' %} active{% endif %}">{% trans "Address Book" %}</a>
+    <a href="{% url 'customer:address-list' %}" class="nav-link{% if active_tab == 'addresses' %} active{% endif %}">地址</a>
 </li>
 <li class="nav-item">
-    <a href="{% url 'customer:email-list' %}" class="nav-link{% if active_tab == 'emails' %} active{% endif %}">{% trans "Email History" %}</a>
+    <a href="{% url 'customer:email-list' %}" class="nav-link{% if active_tab == 'emails' %} active{% endif %}">信箱紀錄</a>
 </li>
 <li class="nav-item">
     <a href="{% url 'customer:alerts-list' %}" class="nav-link{% if active_tab == 'alerts' %} active{% endif %}">{% trans "Product Alerts" %}</a>
 </li>
 <li class="nav-item">
-    <a href="{% url 'customer:notifications-inbox' %}" class="nav-link{% if active_tab == 'notifications' %} active{% endif %}">{% trans "Notifications" %}</a>
+    <a href="{% url 'customer:notifications-inbox' %}"
+        class="nav-link{% if active_tab == 'notifications' %} active{% endif %}">通知</a>
 </li>
 {% iffeature 'wishlists' %}
-    <li class="nav-item">
-        <a href="{% url 'customer:wishlists-list' %}" class="nav-link{% if active_tab == 'wishlists' %} active{% endif %}">{% trans "Wish Lists" %}</a>
-    </li>
+<li class="nav-item">
+    <a href="{% url 'customer:wishlists-list' %}"
+        class="nav-link{% if active_tab == 'wishlists' %} active{% endif %}">{% trans "Wish Lists" %}</a>
+</li>
 {% endiffeature %}
+
+<li class="nav-item">
+   
+</li>
+<li class="nav-item"> <a href="/accounts/seller-apply"  class="nav-link{% if active_tab == 'application' %} active{% endif %}">二手衣上架申請</a>
+</li>
