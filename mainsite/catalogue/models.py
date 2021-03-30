@@ -1,4 +1,3 @@
-
 # yourproject/catalogue/models.py
 
 from django.db import models
@@ -7,23 +6,7 @@ from datetime import date
 from django.utils import timezone
 
 
-class sellerApplicationRecord(models.Model):
-    seller = models.CharField(max_length=20)
-    item_id = models.CharField(max_length=20,default='')
-    SIZE_CHOICES = (
-        ('XXS', 'XXS'),
-        ('XS', 'XS'),
-        ('S', 'S'),
-        ('M', 'M'),
-        ('L', 'L'),
-        ('XL', 'XL'),
-        ('XXL', 'XXL'))
-    size = models.CharField(max_length=3,
-                            choices=SIZE_CHOICES,
-                            default='XXS')
-    color = models.CharField(max_length=20)
-    quantity = models.IntegerField()
-    status = models.CharField(max_length=50)
+
 
 class UNIQLOItem(models.Model):
     UpdateDate = models.DateTimeField('更新時間', auto_now=True)
@@ -84,6 +67,21 @@ class Product(AbstractProduct):
     # ExtendTimes = models.IntegerField(default=0)
     # ExpireDate = models.DateField(default=date.today)
     # ArrivalDate = models.DateField(default=date.today)
+
+class Application_Records(models.Model):
+    username = models.CharField(max_length=30)
+    status = models.CharField(max_length=50)
+    UNIQLOID = models.CharField(max_length=20,default='')
+    title = models.CharField(max_length=50,default='')
+    size = models.CharField(max_length=20)
+    color = models.CharField(max_length=20)
+    wishing_price = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=0)
+    def __str__(self):
+        return self.username + ' | ' +self.UNIQLOID +  ' | ' +self.title +  ' | '+ self.status 
+
+    class Meta:
+        ordering = ['username', 'UNIQLOID']
 
 
 # this must be at the last line

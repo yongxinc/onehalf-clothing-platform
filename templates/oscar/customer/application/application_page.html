@@ -4,13 +4,24 @@
 
 
 {% block content %}
+{% if not itemexist %}
+
+<b><font color=#AE0000>{{ message }}</font></b>
+
+
+{% endif %}
+
+{% if itemexist %}
+<b><font color=#003D79>{{ message }}</font></b>
+{% endif %}
 
 <form name='apply' action='/accounts/seller-apply-process' method='POST'>
     {% csrf_token %}
    {{ form.as_p }}
-    <input type='submit' value='送出'>
+    <input type='submit' value='新增一筆申請'>
     <input type='reset' value='清除重填'>
 </form>
+
 <!-- 
 {% if itemexist %}
 你剛剛輸入了{{uniqlo_id}}

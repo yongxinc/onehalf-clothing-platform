@@ -27,11 +27,8 @@ from oscar.core.loading import (
 PageTitleMixin, RegisterUserMixin = get_classes(
     'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
 
-# class sellerApplication(PageTitleMixin, generic.TemplateView):
-#     def ___init__(self, name):
-#         self.name = name
-
 def sellerApply(request):
+
     page_title = ('二手衣上架申請')
     active_tab = 'application'
     template_name = 'oscar/customer/application/application_page.html'
@@ -43,18 +40,75 @@ def sellerApply(request):
 #可參考 https://peilee-98185.medium.com/%E7%94%A8-django-form-%E5%BE%9E%E5%89%8D%E7%AB%AF%E5%82%B3%E8%B3%87%E6%96%99%E5%AD%98%E9%80%B2%E8%B3%87%E6%96%99%E5%BA%AB-c99723e63056
 #裡面也有類別寫法
 def sellerApplyProcess(request):
+    page_title = ('二手衣上架申請')
+    active_tab = 'application'
     template_name = 'oscar/customer/application/application_page.html'
-    # form = forms.SellerApplicationFrom(request.POST)
-    
-    form = forms.SellerApplicationForm(request.POST)
-    if form.is_valid():
-        uid = form.cleaned_data['item_id']
-        print('done!','uid',uid)
+    form = forms.SellerApplicationForm()
+    itemexist = True #預設值是true
+    # message = ''
 
-        # 0328 : 還要判別該商品是否存在 存在的話就申請成功 寫進record
+    received_form = forms.SellerApplicationForm(request.POST)
+    if received_form.is_valid():
+        uniqlo_id =  received_form.cleaned_data['item_id']
+        try:
+            item = models.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+            print(item)
+            itemexist = True
+                ## 要寫入的資料
+            username = request.user
+            status = '申請已提交，但平台尚未收到賣家寄來的商品'
+            UNIQLOID=uniqlo_id
+            size=received_form.cleaned_data['size']
+            color=received_form.cleaned_data['color']
+            wishing_price=received_form.cleaned_data['wishing_price']
+            message =  '成功提交申請!'
+            title = item.UNIQLOTitle
+            quantity = received_form.cleaned_data['quantity']
+            record = models.Application_Records(username=username, status=status, UNIQLOID=uniqlo_id, title = title,
+                                                size=size, color=color, wishing_price=wishing_price,quantity = quantity)
+            record.save()
+            print(username,'成功提交申請!')
+        except:
+            itemexist = False
+            message = '商品序號有誤！請確認是否輸入正確的商品序號！'
+            username = request.user
+            print(username,'輸入的商品序號有誤！請確認是否輸入正確的商品序號')
+
+    print(uniqlo_id)          
+               
     return render(request, template_name, locals())
 
-    
+
+def sellerApplyRecords(request):
+    template_name = 'oscar/customer/application/records.html'
+    page_title = ('上架申請查詢')
+    active_tab = 'application-records'
+    all_records = models.Application_Records.objects.filter(username=request.user)
+    recordslist = []
+
+    for value in all_records:
+        recordslist.append(value)
+    return render(request, template_name, locals())
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def collectInfo(request):
     UQItems = models.UNIQLOItem.objects.all()
@@ -74,7 +128,7 @@ def collectInfo(request):
 
     # goodsInfoCollector = GoodsInfoCollector('433245')
     # goodsInfoCollector.search()
-    return render(request, 'index.html', locals())
+    return render(request, '', locals())
 # 爬蟲
 class GoodsInfoCollector:
     def __init__(self, serialNumber):
@@ -346,7 +400,6 @@ class GoodsInfoCollector:
             print('順利儲存!')
             unit.save()  # 寫入資料庫
 
-
 class SerialNumberCollector:
     def __init__(self):
 
@@ -356,6 +409,7 @@ class SerialNumberCollector:
         chrome_options.add_argument(
             'User-Agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36"')
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument('--no-sandbox')         
         self.driver = webdriver.Chrome(
             executable_path=Chrome_driver_path, chrome_options=chrome_options)
         # driver.maximize_window()  # 最大化視窗

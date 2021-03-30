@@ -20,6 +20,7 @@ urlpatterns = [
 
     path('accounts/seller-apply',views.sellerApply),  # 賣家申請畫面
     path('accounts/seller-apply-process',views.sellerApplyProcess), #處理申請
+    path('accounts/seller-apply-records',views.sellerApplyRecords),
 
 
     
