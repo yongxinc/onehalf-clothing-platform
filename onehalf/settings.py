@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'mainsite.offer.apps.OfferConfig',
     # official tutorial dashboard applications
     'mainsite.dashboard.apps.DashboardConfig',
+    'mainsite.basket.apps.BasketConfig',
+
     # 'mainsite.dashboard.orders.apps.OrdersDashboardConfig',
     # 'mainsite.dashboard.reports.apps.ReportsDashboardConfig',
 
@@ -61,7 +63,7 @@ INSTALLED_APPS = [
     'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
     'oscar.apps.communication.apps.CommunicationConfig',
     'oscar.apps.partner.apps.PartnerConfig',
-    'oscar.apps.basket.apps.BasketConfig',
+    # 'oscar.apps.basket.apps.BasketConfig',
     'oscar.apps.payment.apps.PaymentConfig',
 
     # 'oscar.apps.offer.apps.OfferConfig',
@@ -172,8 +174,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'zh-TW'
-
+# LANGUAGE_CODE = 'zh-TW'
+LANGUAGE_CODE = 'en-US'
 TIME_ZONE = 'Asia/Taipei'
 
 USE_I18N = True

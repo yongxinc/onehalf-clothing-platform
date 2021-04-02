@@ -1,12 +1,21 @@
 # yourproject/catalogue/models.py
 
 from django.db import models
-from oscar.apps.catalogue.abstract_models import AbstractProduct
+from oscar.apps.catalogue.abstract_models import AbstractProduct, AbstractOption
 from datetime import date
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from oscar.models.fields import AutoSlugField, NullCharField
+from oscar.core.decorators import deprecated
 
-
-
+SIZE_CHOICES = (
+    ('XXS', 'XXS'),
+    ('XS', 'XS'),
+    ('S', 'S'),
+    ('M', 'M'),
+    ('L', 'L'),
+    ('XL', 'XL'),
+    ('XXL', 'XXL'),)
 
 class UNIQLOItem(models.Model):
     UpdateDate = models.DateTimeField('更新時間', auto_now=True)
@@ -52,22 +61,40 @@ class UNIQLOItem(models.Model):
 
 
 class Product(AbstractProduct):
-    SIZE_CHOICES = (
-        ('XXS', 'XXS'),
-        ('XS', 'XS'),
-        ('S', 'S'),
-        ('M', 'M'),
-        ('L', 'L'),
-        ('XL', 'XL'),
-        ('XXL', 'XXL'))
 
     Size = models.CharField(max_length=3,
                             choices=SIZE_CHOICES,
                             default='XXS')
+   
     # ExtendTimes = models.IntegerField(default=0)
     # ExpireDate = models.DateField(default=date.today)
     # ArrivalDate = models.DateField(default=date.today)
 
+   
+
+
+class Option(AbstractOption):
+
+
+     # Option types
+    TEXT = "text"
+    INTEGER = "integer"
+    FLOAT = "float"
+    BOOLEAN = "boolean"
+    DATE = "date"
+    CHOICES = "choices"
+
+    TYPE_CHOICES = (
+        (TEXT, _("Text")),
+        (INTEGER, _("Integer")),
+        (BOOLEAN, _("True / False")),
+        (FLOAT, _("Float")),
+        (DATE, _("Date")),
+        (CHOICES,_("Choices")),
+    )
+   
+    type = models.CharField(_("Type"), max_length=255, default=TEXT, choices=TYPE_CHOICES)
+    
 class Application_Records(models.Model):
     username = models.CharField(max_length=30)
     status = models.CharField(max_length=50)
@@ -83,6 +110,21 @@ class Application_Records(models.Model):
     class Meta:
         ordering = ['username', 'UNIQLOID']
 
+#顏色的資料庫
+class color(models.Model):
+    color_code =  models.CharField(max_length=10)
+    color_name =  models.CharField(max_length=30)
+    color_name_ch = models.CharField(max_length=10, default='')
+    # color_chip_url = models.URLField(default='')
+
+
+    def __str__(self):
+        return self.color_code + ' | ' +self.color_name +  ' | ' +self.color_name_ch
+    class Meta:
+        ordering = ['color_code']
+
+class size(models.Model):
+    size =  models.CharField(max_length=10)
 
 # this must be at the last line
 from oscar.apps.catalogue.models import *  # noqa isort:skip
