@@ -6,9 +6,11 @@
 {% purchase_info_for_product request product as session %}
 
 {% if session.availability.is_available_to_buy %}
+<!-- add to cart 按鈕 和尺寸option -->
     {% basket_form request product as basket_form %}
     <form id="add_to_basket_form" action="{% url 'basket:add' pk=product.pk  %}" method="post" class="add-to-basket mb-0">
         {% csrf_token %}
+        <!-- 這行負責尺寸選項那塊 -->
         {% include "oscar/partials/form_fields.html" with form=basket_form %}
         <button type="submit" class="btn btn-lg btn-primary w-100" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
     </form>

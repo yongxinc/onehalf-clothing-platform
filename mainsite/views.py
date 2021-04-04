@@ -27,6 +27,16 @@ from oscar.core.loading import (
 PageTitleMixin, RegisterUserMixin = get_classes(
     'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
 
+from django.views.generic import DetailView, TemplateView
+from oscar.apps.catalogue.views import ProductDetailView as CoreProductDetailView
+
+#我想試著Override這個view
+# class ProductDetailView(CoreProductDetailView):
+#     model = models.UNIQLOItem
+#     def mo():
+#         print(request)
+
+
 def sellerApply(request):
 
     page_title = ('二手衣上架申請')
@@ -35,7 +45,6 @@ def sellerApply(request):
     form = forms.SellerApplicationForm()
     print('apply is called')
     return render(request, template_name, locals())
-
 
 #可參考 https://peilee-98185.medium.com/%E7%94%A8-django-form-%E5%BE%9E%E5%89%8D%E7%AB%AF%E5%82%B3%E8%B3%87%E6%96%99%E5%AD%98%E9%80%B2%E8%B3%87%E6%96%99%E5%BA%AB-c99723e63056
 #裡面也有類別寫法
@@ -77,7 +86,6 @@ def sellerApplyProcess(request):
     print(uniqlo_id)          
                
     return render(request, template_name, locals())
-
 
 def sellerApplyRecords(request):
     template_name = 'oscar/customer/application/records.html'

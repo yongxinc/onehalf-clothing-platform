@@ -1,3 +1,5 @@
+<!-- 尺寸選項 -->
+
 {% load form_tags %}
 {% load widget_tweaks %}
 
@@ -30,6 +32,7 @@
                                 {{ field.label|safe }}
                             </label>
                         {% else %}
+                        <!-- 就是靠這行程式碼讓optiont出現的! -->
                             {% render_field field class+="form-control" %}
                         {% endif %}
                     {% endblock %}

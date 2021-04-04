@@ -75,7 +75,6 @@ class Product(AbstractProduct):
 
 class Option(AbstractOption):
 
-
      # Option types
     TEXT = "text"
     INTEGER = "integer"
