@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_model
 from oscar.forms import widgets
+import json
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
@@ -32,38 +33,61 @@ def _option_float_field(option, product):
 def _option_date_field(option, product):
         return forms.DateField(label=option.name, required=option.required, widget=forms.widgets.DateInput)
     
-def trimAttribueValue(attr):
-    tmp = attr.replace('尺寸: ','')
-    size_list = tmp.split(', ')
+def trimAttribueValue(attr, option_name):
+    if option_name == '尺寸':
+        tmp = attr.replace('尺寸: ','')
+        size_list = tmp.split(', ')
 
-    for i in range(0, len(size_list)):
-        size_list[i] = (size_list[i],size_list[i])
-    # print('DIY',tuple(size_list))
-    size_tuple = tuple(size_list)
-    return size_tuple
+        for i in range(0, len(size_list)):
+            size_list[i] = (size_list[i],size_list[i])
+        size_tuple = tuple(size_list)
+        return size_tuple
+    elif option_name == '顏色':
+        tmp = attr.replace('顏色: ','')
+        color_list = tmp.split(', ')
+
+        for i in range(0, len(color_list)):
+            color_list[i] = (color_list[i],color_list[i])
+        color_tuple = tuple(color_list)
+        return color_tuple
+
+
+def getColorTupleFromJSON(jsonSoup):
+    # print('getColorTupleFromJSON')
+    color_dict = json.loads(jsonSoup)
+    color_tuple = turnDictToTuple(color_dict)
+    return color_tuple
+
+def turnDictToTuple(someDict):
+    # print('turnDictToTuple')
+    color_view = someDict.items()
+    color_list = list(color_view)
+    color_tuple = tuple(color_list)
+    return color_tuple
+
 
 def _option_choices_field(option, product):
-    SIZE_CHOICES = (
-        ('XXS', 'XXS'),
-        ('XS', 'XS'),
-        ('S', 'S'),
-        ('M', 'M'),
-        ('L', 'L'),
-        ('XL', 'XL'),
-        ('XXL', 'XXL'))
-    print('true',SIZE_CHOICES)
-    attribute = ProductAttribute.objects.filter(name='尺寸')
-        # target_product = Product.objects.filter(upc='12345')
-    product_attribute_value = ProductAttributeValue.objects.filter(attribute=attribute[0],product=product)
-    size_tuple = trimAttribueValue(str(product_attribute_value[0]))
-
+    if option.name == '尺寸':
+        size_attribute = ProductAttribute.objects.filter(name='尺寸')
+        size_product_attribute_value = ProductAttributeValue.objects.filter(attribute=size_attribute[0],product=product)
+        size_tuple = trimAttribueValue(str(size_product_attribute_value[0]),'尺寸')
+        print('size option generated')
+        return forms.ChoiceField(label=option.name, required=option.required, choices=size_tuple)
+    elif option.name == '顏色':
+        color_attribute = ProductAttribute.objects.filter(name='顏色')
+        color_product_attribute_value = ProductAttributeValue.objects.filter(attribute=color_attribute[0],product=product)
+        color_tuple = trimAttribueValue(str(color_product_attribute_value[0]),'顏色')
+        print('color option generated')
+        return forms.ChoiceField(label=option.name, required=option.required, choices=color_tuple)
+    # start of test_area
     # print(str(product_attribute_value[0]))
     
         # item = ProductAttributeValue.objects.filter(attribute=attribute[0],product=target_product)
 
         # for value in item:
         #     print(value)
-    return forms.ChoiceField(label=option.name, required=option.required, choices=size_tuple)
+    # end of test_area
+    
 
 class AddToBasketForm(AddToBasketForm):
     
@@ -83,12 +107,10 @@ class AddToBasketForm(AddToBasketForm):
         This is designed to be overridden so that specific widgets can be used
         for certain types of options.
         """
-        target_product = self.product
-        product_title = target_product.get_title
-        product_upc = target_product.upc
-
+       
         option_field = self.OPTION_FIELD_FACTORIES.get(option.type, Option.TEXT) (option, product)
-        # test
+
+        # start of test_area
         # print('option.type',option.type) #choices
         # print('option',option) #尺寸
         # print('Option',Option) #<class 'mainsite.catalogue.models.Option'>
@@ -96,7 +118,7 @@ class AddToBasketForm(AddToBasketForm):
 
         # print the product info in this showing page
         # print(product_title, product_upc)
-
+        # end of test_area
         self.fields[option.code] = option_field
     
 class SimpleAddToBasketForm(SimpleAddToBasketMixin, AddToBasketForm):

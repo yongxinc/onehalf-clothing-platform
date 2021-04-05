@@ -1,7 +1,7 @@
 # yourproject/catalogue/models.py
 
 from django.db import models
-from oscar.apps.catalogue.abstract_models import AbstractProduct, AbstractOption
+from oscar.apps.catalogue.abstract_models import AbstractProduct, AbstractOption, AbstractProductAttributeValue
 from datetime import date
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -70,7 +70,8 @@ class Product(AbstractProduct):
     # ExpireDate = models.DateField(default=date.today)
     # ArrivalDate = models.DateField(default=date.today)
 
-   
+# class ProductAttributeValue(AbstractProductAttributeValue):
+    
 
 
 class Option(AbstractOption):
