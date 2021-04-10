@@ -3,6 +3,7 @@ from django import forms
 class SellerApplicationForm(forms.Form):
     seller = forms.HiddenInput()
     item_id = forms.CharField(label='商品序號',max_length=20)
+    
     color = forms.CharField(label='商品顏色',max_length=20)
     SIZE_CHOICES = (
         ('DEFAULT', '----'),

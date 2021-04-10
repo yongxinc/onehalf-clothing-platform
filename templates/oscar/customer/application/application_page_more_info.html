@@ -1,0 +1,103 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+{% load custom_tags %}
+<!-- 範例中可以看到Django類別導向的檢視(Class-based Views)預設將查詢結果的物件以object_list傳入樣板中。 -->
+
+{% block content %}
+{% if not itemexist %}
+<b><font color=#AE0000>{{ message }}</font></b>
+
+
+{% endif %}
+
+{% if itemexist %}
+<b><font color=#003D79>{{ message }}</font></b>
+{% endif %}
+
+<form name='apply' action='/accounts/seller-apply-process-info' method='POST'>
+    {% csrf_token %}
+   <input type="hidden" id="sellerID" name="sellerID" value={{ sellerID }}>
+    <br>
+   <label><B>您現在在申請上架的是<br><h3> {{uniqlo_id}}  {{uniqlo_title}}</B></h3></label>
+
+    <br>
+ 
+
+<hr>
+   <label><b>商品圖片</b></label><br>
+
+
+   {% for item in uniqlo_title_imgs_url_list %}
+   {% if looptimes|count:'0' == 6 %}
+   <hr>
+   {% endif %}
+
+   <img src={{item}} style="width:130px;height:130px;">&nbsp
+   {% endfor %}
+   {{ none|reset:'0' }}
+   <br>
+   <hr>
+   <br>
+   <label for="color_radio_btn"><b>商品顏色</b></label><br>
+    {% for key,value in color_dict.items %}
+    {% if looptimes|count:'0' == 6 %}
+   <hr>
+   {% endif %}
+   <input type="radio" id="color_radio_btn" name="color_radio_btn" value={{key}}>
+    <label for={{key}}> <img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{uniqlo_id}}/chip/{{key}}_{{uniqlo_id}}.gif  alt={{value}} style="width:70px;height:70px;"><br> {{value}} </label> 
+    &nbsp&nbsp&nbsp
+    <!-- <label for={{item}}><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{uniqlo_id}}/item/{{color}}_{{uniqlo_id}}.jpg  style="width:70px;height:70px;"></label>  -->
+    {% endfor %}
+    {{ none|reset:'0' }}
+    
+
+    <br>
+    <hr>
+    <br>
+    <label for="size_radio_btn"><b>商品尺寸</b></label><br>
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XXS'>
+   <label for='XXS'>XXS </label>  |
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XS'>
+   <label for='XS'>XS </label>  |
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='S'>
+   <label for='S'>S </label>  |
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='M'>
+   <label for='M'>M </label>  |
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='L'>
+   <label for='L'>L </label>  |
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XL'>
+   <label for='XL'>XL </label>  |
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XXL'>
+   <label for='XXL'>XXL </label>
+   <br>
+   <hr>
+   <br>
+   <label for="quantity"><b>數量</b></label><br>
+    <select name="quantity" id="quantity">
+    <option value="1">&nbsp;&nbsp;&nbsp;1</option>
+    <option value="2">&nbsp;&nbsp;&nbsp;2</option>
+    <option value="3">&nbsp;&nbsp;&nbsp;3</option>
+    <option value="4">&nbsp;&nbsp;&nbsp;4</option>
+    <option value="5">&nbsp;&nbsp;&nbsp;5</option>
+    </select>
+    <br>
+    <hr>
+    <br>
+    <label for="wishing_price"><b>欲售價格</b></label><br>
+    <input type="text" id="wishing_price" name="wishing_price" size=4>
+    <br>
+    <hr>
+    <br>
+    <input type='submit' value='送出申請'>
+    <input type='reset' value='清除重填'>
+    
+    
+</form>
+
+<!-- 
+{% if itemexist %}
+你剛剛輸入了{{uniqlo_id}}
+{% else %}
+哈哈
+{% endif %} -->
+
+{% endblock  %}

@@ -17,9 +17,17 @@
 
 <form name='apply' action='/accounts/seller-apply-process' method='POST'>
     {% csrf_token %}
-   {{ form.as_p }}
-    <input type='submit' value='新增一筆申請'>
+   <!-- {{ form.as_p }} -->
+   <input type="hidden" id="uniqlo_item_query_result" name="uniqlo_item_query_result"  value={{ UNIQLOItemQuerySetStr }}><br>
+   <input type="hidden" id="sellerID" name="sellerID" value={{ sellerID }}>
+
+   <label for="itemID">商品序號</label><br>
+   <input type="text" id="itemID" name="itemID"  onfocusout="focusoutFunction()"><br>
+    
+    <input type='submit' value='確定商品序號'>
     <input type='reset' value='清除重填'>
+    
+    
 </form>
 
 <!-- 

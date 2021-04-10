@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     # official tutorial dashboard applications
     'mainsite.dashboard.apps.DashboardConfig',
     'mainsite.basket.apps.BasketConfig',
-
     # 'mainsite.dashboard.orders.apps.OrdersDashboardConfig',
     # 'mainsite.dashboard.reports.apps.ReportsDashboardConfig',
 

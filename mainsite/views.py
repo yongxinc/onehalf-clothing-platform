@@ -42,52 +42,116 @@ def sellerApply(request):
     page_title = ('二手衣上架申請')
     active_tab = 'application'
     template_name = 'oscar/customer/application/application_page.html'
-    form = forms.SellerApplicationForm()
+    sellerID = request.user
+    # form = forms.SellerApplicationForm()
     print('apply is called')
+
     return render(request, template_name, locals())
 
 #可參考 https://peilee-98185.medium.com/%E7%94%A8-django-form-%E5%BE%9E%E5%89%8D%E7%AB%AF%E5%82%B3%E8%B3%87%E6%96%99%E5%AD%98%E9%80%B2%E8%B3%87%E6%96%99%E5%BA%AB-c99723e63056
 #裡面也有類別寫法
+def getColorsFromJSON(item):
+    universal_url =  'https://im.uniqlo.com/images/tw/uq/pc/goods/ITEMID/chip/COLORCODE_ITEMID.gif'
+    item_url = universal_url.replace('ITEMID',item.UNIQLOID)
+    # item_url = universal_url.replace('COLORCODE',item.UNIQLOID)
+
+
+    color_dict = json.loads(item.ClothesColorJSON)
+
+    color_name_list = []
+    color_chip_list = []
+
+    for key,value in color_dict.items():
+        # color_name_list.append(key+' '+value)
+        color_name_list.append(key)
+        item_url=item_url.replace('COLORCODE',key)
+        color_chip_list.append(item_url)
+        item_url=item_url.replace(key,'COLORCODE')
+    # print(color_name_list)
+    # print(color_chip_list)
+    # return color_name_list,color_chip_list
+    return color_dict
+def getTitleImagesFromJSON(item):
+    uniqlo_product_title_images_json = item.TitleImagesJSON
+    uniqlo_product_title_image_dict = json.loads(uniqlo_product_title_images_json)
+    uniqlo_product_title_image_list = []
+    for key, value in uniqlo_product_title_image_dict.items():
+        for val in value:
+            uniqlo_product_title_image_list.append(val)
+    
+    return uniqlo_product_title_image_list
+
+
 def sellerApplyProcess(request):
+
     page_title = ('二手衣上架申請')
     active_tab = 'application'
-    template_name = 'oscar/customer/application/application_page.html'
-    form = forms.SellerApplicationForm()
+    template_name_source = 'oscar/customer/application/application_page.html'
+    template_name_forward = 'oscar/customer/application/application_page_more_info.html'
     itemexist = True #預設值是true
-    # message = ''
+    message = ''
+    sellerID = request.user
+    uniqlo_title= ''
+    uniqlo_product_img_url =''
+    times = '1'
+        
+    uniqlo_id = request.POST['itemID']
+    
+    print('post',request.POST['sellerID'],'輸入了商品序號',request.POST['itemID'])
 
-    received_form = forms.SellerApplicationForm(request.POST)
-    if received_form.is_valid():
-        uniqlo_id =  received_form.cleaned_data['item_id']
-        try:
-            item = models.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
-            print(item)
-            itemexist = True
-                ## 要寫入的資料
-            username = request.user
-            status = '申請已提交，但平台尚未收到賣家寄來的商品'
-            UNIQLOID=uniqlo_id
-            size=received_form.cleaned_data['size']
-            color=received_form.cleaned_data['color']
-            wishing_price=received_form.cleaned_data['wishing_price']
-            message =  '成功提交申請!'
-            title = item.UNIQLOTitle
-            quantity = received_form.cleaned_data['quantity']
-            record = models.Application_Records(username=username, status=status, UNIQLOID=uniqlo_id, title = title,
-                                                size=size, color=color, wishing_price=wishing_price,quantity = quantity)
-            record.save()
-            print(username,'成功提交申請!')
-        except:
-            itemexist = False
-            message = '商品序號有誤！請確認是否輸入正確的商品序號！'
-            username = request.user
-            print(username,'輸入的商品序號有誤！請確認是否輸入正確的商品序號')
+    item = models.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+    uniqlo_title = item.UNIQLOTitle
+    uniqlo_title_imgs_url_list = getTitleImagesFromJSON(item)
+    
+    if item != None:
+        color_dict = getColorsFromJSON(item)
+        # print(color_name_list)
+        # print(color_chip_list)
 
-    print(uniqlo_id)          
-               
-    return render(request, template_name, locals())
+        return render(request, template_name_forward, locals())
+    else:
+        itemexist = False
+        message = '此商品不存在! 請確認是否輸入正確的商品序號!'
+        print(message)
+        return render(request, template_name_source, locals())
+
+def sellerApplyProcessInfo(request):
+    #todo 處理收集到的資料 並且save進records裡面
+    print('色碼',request.POST['color_radio_btn'])
+    print('用戶',request.POST['sellerID'])
+    
+    # received_form = forms.SellerApplicationForm(request.POST)
+    # if received_form.is_valid():
+    #     uniqlo_id =  received_form.cleaned_data['item_id']
+    #     try:
+    #         item = models.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+    #         print(item)
+    #         itemexist = True
+    #             ## 要寫入的資料
+    #         username = request.user
+    #         status = '申請已提交，但平台尚未收到賣家寄來的商品'
+    #         UNIQLOID=uniqlo_id
+    #         size=received_form.cleaned_data['size']
+    #         color=received_form.cleaned_data['color']
+    #         wishing_price=received_form.cleaned_data['wishing_price']
+    #         message =  '成功提交申請!'
+    #         title = item.UNIQLOTitle
+    #         quantity = received_form.cleaned_data['quantity']
+    #         record = models.Application_Records(username=username, status=status, UNIQLOID=uniqlo_id, title = title,
+    #                                             size=size, color=color, wishing_price=wishing_price,quantity = quantity)
+    #         record.save()
+    #         print(username,'成功提交申請!')
+    #     except:
+    #         itemexist = False
+    #         message = '商品序號有誤！請確認是否輸入正確的商品序號！'
+    #         username = request.user
+    #         print(username,'輸入的商品序號有誤！請確認是否輸入正確的商品序號')
+
+    # print(uniqlo_id)          
+    return render(request, 'oscar/customer/application/application_page_more_info.html', locals())
 
 def sellerApplyRecords(request):
+    #todo-可查尋 可修改 可刪除
     template_name = 'oscar/customer/application/records.html'
     page_title = ('上架申請查詢')
     active_tab = 'application-records'
@@ -97,16 +161,6 @@ def sellerApplyRecords(request):
     for value in all_records:
         recordslist.append(value)
     return render(request, template_name, locals())
-
-
-        
-
-
-
-
-
-
-
 
 
 

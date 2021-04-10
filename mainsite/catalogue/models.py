@@ -73,7 +73,6 @@ class Product(AbstractProduct):
 # class ProductAttributeValue(AbstractProductAttributeValue):
     
 
-
 class Option(AbstractOption):
 
      # Option types
