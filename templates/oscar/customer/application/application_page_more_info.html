@@ -16,8 +16,9 @@
 <form name='apply' action='/accounts/seller-apply-process-info' method='POST'>
     {% csrf_token %}
    <input type="hidden" id="sellerID" name="sellerID" value={{ sellerID }}>
+   <input type="hidden" id="uniqlo_id" name="uniqlo_id" value={{ uniqlo_id }}>
     <br>
-   <label><B>您現在在申請上架的是<br><h3> {{uniqlo_id}}  {{uniqlo_title}}</B></h3></label>
+   <label><B>您現在在申請上架的是<br><h3> {{uniqlo_id}}  {{uniqlo_title}} </B></h3></label>
 
     <br>
  
@@ -39,7 +40,7 @@
    <br>
    <label for="color_radio_btn"><b>商品顏色</b></label><br>
     {% for key,value in color_dict.items %}
-    {% if looptimes|count:'0' == 6 %}
+    {% if looptimes|count:'0' == 6%}
    <hr>
    {% endif %}
    <input type="radio" id="color_radio_btn" name="color_radio_btn" value={{key}}>
@@ -82,8 +83,8 @@
     <br>
     <hr>
     <br>
-    <label for="wishing_price"><b>欲售價格</b></label><br>
-    <input type="text" id="wishing_price" name="wishing_price" size=4>
+    <label for="wishing_price"><b>欲售價格&nbsp/&nbsp原價</b></label><br>
+    $<input type="text" id="wishing_price" name="wishing_price" size=4>&nbsp / &nbsp ${{original_price}}
     <br>
     <hr>
     <br>

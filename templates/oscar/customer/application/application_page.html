@@ -15,7 +15,7 @@
 <b><font color=#003D79>{{ message }}</font></b>
 {% endif %}
 
-<form name='apply' action='/accounts/seller-apply-process' method='POST'>
+<form name='apply' action='/accounts/seller-apply-submit-serial-number' method='POST'>
     {% csrf_token %}
    <!-- {{ form.as_p }} -->
    <input type="hidden" id="uniqlo_item_query_result" name="uniqlo_item_query_result"  value={{ UNIQLOItemQuerySetStr }}><br>

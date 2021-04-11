@@ -8,7 +8,7 @@ def count(value, arg):
             current_times_str = times_txt_file.read() # 讀取檔案內容
 
     if arg == current_times_str:
-        print('first time')
+        # print('first time')
         incremented_times = int(arg) + 1
         with open('mainsite/templatetags/times.txt', 'w') as times_txt_file:
             str_times = str(incremented_times)
@@ -22,7 +22,7 @@ def count(value, arg):
         current_times_val = int(current_times_str)
         incremented_times_val = current_times_val + 1
         incremented_times_str = str(incremented_times_val)
-        print('current_times_val',incremented_times_val)
+        # print('current_times_val',incremented_times_val)
 
         with open('mainsite/templatetags/times.txt', 'w') as times_txt_file:
             times_txt_file.write(incremented_times_str) # 讀取檔案內容

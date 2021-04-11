@@ -1,11 +1,125 @@
 {% extends "oscar/customer/baseaccountpage.html" %}
 
-<!-- 範例中可以看到Django類別導向的檢視(Class-based Views)預設將查詢結果的物件以object_list傳入樣板中。 -->
-
 
 {% block content %}
-{% for record in recordslist %}
-{{record.UNIQLOID}} {{record.title}} {{record.color}} {{record.status}}<br>
-{% endfor %}
 
+<br><small>
+<b>您可以在此查詢已送出之申請狀態，寄出商品時煩請您留意以下幾點注意事項：</b>
+<li>本平台僅接受<b>9成新</b>以上之UNIQLO衣物</li>
+<li>若商品不符規格將通知您，請您<b>自費退回</b></li>
+<li>寄出時需要麻煩您連同寫好／印好<b>商品項目之明細表</b>連同商品一起寄出，以下格式可供參考：</li>
+<hr><cite>
+<font color=#696969>
+&nbsp&nbsp&nbsp&nbsp&nbsp註冊信箱：xxxxxxxxxxx@gmail.com<br>
+&nbsp&nbsp&nbsp&nbsp&nbsp包裹內含以下商品<br>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp1. 436612 水洗設計褲裙 綠色 1件<br>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp2. 437592 設計羅紋方領T恤(短袖) 紅色 1件<br>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp3. 437592 設計羅紋方領T恤(短袖) 橙色 1件<br>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(商品編號／品名／顏色／數量)
+</font></cite></small>
+<hr>
+<h4><b>➜ 申請已提交，但平台尚未收到賣家寄來的商品</b></h4>
+{% if records_application_submited_is_empty %}
+無資料
+
+{% else %}
+<hr>
+<table style="padding:3px;" rules="all" cellpadding='8'; >
+<thead>
+    <th>商品圖片</th>
+    <th>商品序號</th>
+    <th>商品名稱</th>
+    <th>顏色</th>
+    <th>數量</th>
+    <th>欲售價格</th>
+  </thead>
+<tbody>
+{% for record in records_application_submited %}
+<tr>
+ 
+    <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
+    </td>
+    <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
+    <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
+    <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
+    <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
+    <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif%}
+<br>
+<br>
+<hr>
+<h4><b>➜ 平台已收到賣家寄來的商品，審查中</b></h4>
+{% if records_package_received_is_empty %}
+無資料
+{% else %}
+<hr>
+<table style="padding:3px;" rules="all" cellpadding='8'; >
+    <thead>
+        <th>商品圖片</th>
+        <th>商品序號</th>
+        <th>商品名稱</th>
+        <th>顏色</th>
+        <th>數量</th>
+        <th>欲售價格</th>
+      </thead>
+    <tbody>
+    {% for record in records_package_received %}
+    <tr>
+     
+        <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
+        </td>
+        <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
+    
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endif %}
+<br>
+<br><br>
+<hr>
+<h4><b>➜ 已上架商品</b></h4>
+<small>
+<b>您可以在此區塊查詢已上架進行販售的商品，若要查看已售出的商品，請至「已售出商品」</b>
+<li>若一品項同一尺寸有許多賣家同時寄賣，本平台將以收到商品之順序進行銷售。</li></small>
+<hr>
+{% if records_on_selling_is_empty %}
+無資料
+{% else %}
+<table style="padding:3px;" rules="all" cellpadding='8'; >
+    <thead>
+        <th>商品圖片</th>
+        <th>商品序號</th>
+        <th>商品名稱</th>
+        <th>顏色</th>
+        <th>數量</th>
+        <th>欲售價格</th>
+      </thead>
+    <tbody>
+    {% for record in records_on_selling %}
+    <tr>
+     
+        <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
+        </td>
+        <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
+    
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+{% endif %}
 {% endblock  %}

@@ -1,0 +1,19 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+
+<!-- 範例中可以看到Django類別導向的檢視(Class-based Views)預設將查詢結果的物件以object_list傳入樣板中。 -->
+
+
+{% block content %}
+
+{% if not is_success %}
+
+<b><font color=#AE0000>{{ message }}</font></b>
+
+
+{% endif %}
+
+{% if is_success %}
+<b><font color=#003D79>{{ message }}</font></b>
+{% endif %}
+
+{% endblock  %}

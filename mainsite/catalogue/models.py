@@ -95,17 +95,22 @@ class Option(AbstractOption):
     type = models.CharField(_("Type"), max_length=255, default=TEXT, choices=TYPE_CHOICES)
     
 class Application_Records(models.Model):
+    STATUS_CHOICES = (
+    ('application_submited', '申請已提交，但平台尚未收到賣家寄來的商品'),
+    ('package_received', '平台已收到賣家寄來的商品，審查中'),
+    ('on_selling', '已上架'),)
     username = models.CharField(max_length=30)
-    status = models.CharField(max_length=50)
+    status = models.CharField(max_length=100,choices=STATUS_CHOICES,default='default')
     UNIQLOID = models.CharField(max_length=20,default='')
     title = models.CharField(max_length=50,default='')
     size = models.CharField(max_length=20)
-    color = models.CharField(max_length=20)
+    color_code = models.CharField(max_length=20)
+    color_name_ch = models.CharField(max_length=20, default='')
+    color_name_eng = models.CharField(max_length=20, default='')
     wishing_price = models.IntegerField(default=0)
     quantity = models.IntegerField(default=0)
     def __str__(self):
         return self.username + ' | ' +self.UNIQLOID +  ' | ' +self.title +  ' | '+ self.status 
-
     class Meta:
         ordering = ['username', 'UNIQLOID']
 
