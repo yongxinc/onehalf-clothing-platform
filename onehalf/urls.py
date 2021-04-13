@@ -23,6 +23,7 @@ urlpatterns = [
     path('accounts/seller-apply-process-info',views.sellerApplyProcessInfo), #處理申請 step 2
     path('accounts/seller-apply-records',views.sellerApplyRecords),
     path('accounts/seller-sold_items',views.sellerSoldItem),
+    path('accounts/revise_apply',views.reviseApplication),
     
 
 

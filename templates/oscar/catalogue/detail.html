@@ -1,5 +1,5 @@
 {% extends "oscar/layout.html" %}
-
+<!-- 用來顯示個別商品 -->
 {% load history_tags %}
 {% load currency_filters %}
 {% load reviews_tags %}
@@ -71,12 +71,22 @@
                 {% include "oscar/catalogue/partials/stock_record.html" with verbose=1 %}
             {% endblock %}
 
+            {% block product_description %}
+                {% if product.description %}
+                    <div id="product_description" class="sub-header">
+                        <!-- <h2>{% trans "Product Description" %}</h2> -->
+                    </div>
+                    
+                    <small><p>{{ product.description|safe }}</p></small>
+                {% endif %}
+            {% endblock %}
+<!-- 
             {% iffeature "reviews" %}
                 {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
-            {% endiffeature %}
+            {% endiffeature %} -->
 
             <hr/>
-
+            <!-- 購物車按鈕 -->
             {% if not product.is_parent %}
                 {% block product_basket_form %}
                     {% include "oscar/catalogue/partials/add_to_basket_form.html" %}
@@ -97,14 +107,7 @@
 
     </div><!-- /row -->
 
-    {% block product_description %}
-        {% if product.description %}
-        <div id="product_description" class="sub-header">
-            <h2>{% trans "Product Description" %}</h2>
-        </div>
-        <p>{{ product.description|safe }}</p>
-        {% endif %}
-    {% endblock %}
+   
 
     {% block product_info %}
     <div class="sub-header">
@@ -114,24 +117,26 @@
         {% if product.upc %}
         <tr>
             <th>{% trans "UPC" %}</th><td>{{ product.upc }}</td>
-        </tr>
+        </tr> 
         {% endif %}
-        <tr>
+        <!-- <tr>
             <th>{% trans "Product Type" %}</th><td>{{ product.get_product_class.name }}</td>
-        </tr>
+        </tr> -->
+      
 
+      
         {% purchase_info_for_product request product as session %}
         {% if session.price.exists %}
-            <tr>
+            <!-- <tr>
                 <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency:session.price.currency }}</td>
-            </tr>
+            </tr> -->
             {% if session.price.is_tax_known %}
-                <tr>
+                <!-- <tr>
                     <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency:session.price.currency }}</td>
                 </tr>
                 <tr>
                     <th>{% trans "Tax" %}</th><td>{{ session.price.tax|currency:session.price.currency }}</td>
-                </tr>
+                </tr> -->
             {% endif %}
             <tr>
                 <th>{% trans "Availability" %}</th>
@@ -149,10 +154,10 @@
                 <th>{% trans "Number of reviews" %}</th>
                 <td>{{ product.num_approved_reviews }}</td>
             </tr>
-        {% endiffeature %}
+        {% endiffeature %} 
     </table>
     {% endblock %}
-
+<hr>
     {% iffeature "reviews" %}
         {% block product_review %}
         <section>

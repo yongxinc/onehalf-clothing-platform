@@ -62,10 +62,9 @@ class UNIQLOItem(models.Model):
 
 class Product(AbstractProduct):
 
-    Size = models.CharField(max_length=3,
-                            choices=SIZE_CHOICES,
-                            default='XXS')
-   
+   class Meta:
+        ordering = ['title','upc']
+
     # ExtendTimes = models.IntegerField(default=0)
     # ExpireDate = models.DateField(default=date.today)
     # ArrivalDate = models.DateField(default=date.today)

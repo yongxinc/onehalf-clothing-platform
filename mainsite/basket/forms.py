@@ -51,7 +51,6 @@ def trimAttribueValue(attr, option_name):
         color_tuple = tuple(color_list)
         return color_tuple
 
-
 def getColorTupleFromJSON(jsonSoup):
     # print('getColorTupleFromJSON')
     color_dict = json.loads(jsonSoup)
@@ -64,7 +63,6 @@ def turnDictToTuple(someDict):
     color_list = list(color_view)
     color_tuple = tuple(color_list)
     return color_tuple
-
 
 def _option_choices_field(option, product):
     if option.name == '尺寸':
@@ -99,7 +97,7 @@ class AddToBasketForm(AddToBasketForm):
             Option.DATE: _option_date_field,
             Option.CHOICES: _option_choices_field,
         }
-
+    quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
     def _add_option_field(self, product, option):
         """
         Creates the appropriate form field for the product option.

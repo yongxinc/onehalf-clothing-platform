@@ -23,6 +23,10 @@
 無資料
 
 {% else %}
+<form name='revise_apply' action='/accounts/revise_apply' method='POST'>
+    {% csrf_token %}
+
+
 <hr>
 <table style="padding:3px;" rules="all" cellpadding='8'; >
 <thead>
@@ -44,11 +48,14 @@
     <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
     <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
     <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
+    <td style="height:65px;" align='center' valign="middle"><input type="submit" value="修改"></td>
+
 
 </tr>
 {% endfor %}
 </tbody>
 </table>
+</form>
 {% endif%}
 <br>
 <br>
@@ -65,7 +72,7 @@
         <th>商品名稱</th>
         <th>顏色</th>
         <th>數量</th>
-        <th>欲售價格</th>
+    
       </thead>
     <tbody>
     {% for record in records_package_received %}
@@ -78,7 +85,7 @@
         <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
-    
+
     </tr>
     {% endfor %}
     </tbody>
@@ -103,6 +110,7 @@
         <th>顏色</th>
         <th>數量</th>
         <th>欲售價格</th>
+        <th>修改</th>
       </thead>
     <tbody>
     {% for record in records_on_selling %}
@@ -115,6 +123,8 @@
         <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
+
+
     
     </tr>
     {% endfor %}

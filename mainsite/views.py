@@ -192,6 +192,8 @@ def sellerSoldItem(request):
     return render(request, 'index.html' , locals())
 
 
+def reviseApplication(request):
+    return render(request, 'oscar/customer/application/revise_apply.html' , locals())
 
 
 
