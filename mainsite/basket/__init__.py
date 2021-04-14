@@ -1,1 +1,1 @@
-default_app_config = 'mainsite.basket.apps.BasketConfig'
+default_app_config = 'mainsite.partner.partner.apps.PartnerConfig'

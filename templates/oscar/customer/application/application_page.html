@@ -18,7 +18,6 @@
 <form name='apply' action='/accounts/seller-apply-submit-serial-number' method='POST'>
     {% csrf_token %}
    <!-- {{ form.as_p }} -->
-   <input type="hidden" id="uniqlo_item_query_result" name="uniqlo_item_query_result"  value={{ UNIQLOItemQuerySetStr }}><br>
    <input type="hidden" id="sellerID" name="sellerID" value={{ sellerID }}>
 
    <label for="itemID">商品序號</label><br>

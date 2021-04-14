@@ -13,7 +13,8 @@ import requests
 import selenium
 from bs4 import BeautifulSoup
 import json
-from .catalogue import models
+from .catalogue import models as catalogue
+from oscar.apps.partner import models as partner
 from django.views import generic
 from django.views.generic import (
     ListView, CreateView
@@ -100,7 +101,7 @@ def sellerApplyReceiveSerialNumber(request):
     uniqlo_id = uniqlo_id.strip()
     print('post',request.POST['sellerID'],'輸入了商品序號',request.POST['itemID'])
     try:
-        item = models.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+        item = catalogue.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
         uniqlo_title = item.UNIQLOTitle
         uniqlo_title_imgs_url_list = getTitleImagesFromJSON(item)
         original_price = item.OriginalPrice
@@ -137,10 +138,10 @@ def sellerApplyProcessInfo(request):
     print('欲售價格',request.POST['wishing_price'])
     seller_id = request.POST['sellerID']
     print('用戶',request.POST['sellerID'])
-    all_colors = models.color.objects.all()
+    all_colors = catalogue.color.objects.all()
     
     # try:
-    item = models.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+    item = catalogue.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
     if item != None:
         title = item.UNIQLOTitle
         ## 要寫入的資料
@@ -149,7 +150,7 @@ def sellerApplyProcessInfo(request):
         color_name_ch = color_queryset[0].color_name_ch
         # color_ch = color_ch,  color_eng = color_eng
         status = 'application_submited'
-        record = models.Application_Records(username=seller_id, status=status, UNIQLOID=uniqlo_id,color_name_eng=color_name,color_name_ch=color_name_ch, title = title, size=size, color_code=color_code, wishing_price=wishing_price,quantity = quantity)
+        record = catalogue.Application_Records(username=seller_id, status=status, UNIQLOID=uniqlo_id,color_name_eng=color_name,color_name_ch=color_name_ch, title = title, size=size, color_code=color_code, wishing_price=wishing_price,quantity = quantity)
         record.save()
         is_success = True
         message =  '成功提交申請! 可至「上架申請查詢」查詢相關申請！'
@@ -168,7 +169,8 @@ def sellerApplyRecords(request):
     template_name = 'oscar/customer/application/records.html'
     page_title = ('上架申請查詢')
     active_tab = 'application-records'
-    all_records = models.Application_Records.objects.filter(username=request.user)
+    user = request.user
+    all_records = catalogue.Application_Records.objects.filter(username=request.user)
     status_list = ['application_submited', 'package_received','on_selling']
     records_application_submited = all_records.filter(status=status_list[0])
     if len(records_application_submited) == 0 :
@@ -192,15 +194,160 @@ def sellerSoldItem(request):
     return render(request, 'index.html' , locals())
 
 
-def reviseApplication(request):
-    return render(request, 'oscar/customer/application/revise_apply.html' , locals())
+def reviseApplicationOrSellingItem(request):
+    template_name = 'oscar/customer/application/revise_submitted_item.html'
+    active_tab = 'application-records'
+    radio_name = 'check'
+    page_title = ('修改申請')
+    what_to_be_revised = request.POST['what_to_be_revised']
+    
+    username = request.user
+    revising_item_info_list = request.POST[radio_name].split(',') #uid #color_ch #size # wishing_price
+    uniqlo_id = revising_item_info_list[0]
+
+    item = catalogue.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+    uniqlo_title = item.UNIQLOTitle
+    original_price = item.OriginalPrice
+    color_dict={}
+    if item != None:
+        color_dict = getColorsFromJSON(item)
+
+    color_code = revising_item_info_list[1]
+    size = revising_item_info_list[2]
+    wishing_price = revising_item_info_list[3]
+
+    all_items_of_this_user = catalogue.Application_Records.objects.filter(username=username)
+    items_uid_filtered = all_items_of_this_user.filter(UNIQLOID=uniqlo_id)
+    items_uid_size_filtered = items_uid_filtered.filter(size=size)
+    items_uid_size_color_filtered = items_uid_size_filtered.filter(color_code=color_code)
+
+    return render(request, template_name , locals())
+
+def saveChange(request):
+    template_name = 'oscar/customer/application/revise_success.html'
+    active_tab = 'application-records'
+    radio_name = 'check'
+    page_title = ('修改申請')
+    what_to_be_revised = request.POST['what_now_revising']
+    
+    username = request.user
+    uniqlo_id = request.POST['uniqlo_id']
+    original_color_code = request.POST['original_color_code']
+    original_size = request.POST['original_size']
+    original_quantity = request.POST['original_quantity']
+    original_wishing_price = request.POST['original_wishing_price']
+
+    if what_to_be_revised == 'application_submited':
+        color_code= request.POST['color_radio_btn']
+        size = request.POST['size_radio_btn']
+        quantity = request.POST['quantity']
+        wishing_price = request.POST['wishing_price']
+        targeted_item_to_be_edited = catalogue.Application_Records.objects.filter(username=username)
+        targeted_item_to_be_edited = targeted_item_to_be_edited.filter(UNIQLOID=uniqlo_id)
+        targeted_item_to_be_edited = targeted_item_to_be_edited.filter(color_code=original_color_code)
+        targeted_item_to_be_edited = targeted_item_to_be_edited.filter(wishing_price=original_wishing_price)
+        targeted_item_to_be_edited = targeted_item_to_be_edited.get(size=original_size)
+        targeted_item_to_be_edited.color_code = color_code
+        targeted_item_to_be_edited.size = size
+        targeted_item_to_be_edited.quantity = quantity
+        targeted_item_to_be_edited.wishing_price = wishing_price
+        targeted_item_to_be_edited.save()
+
+    if what_to_be_revised == 'selling_item':
+        wishing_price = request.POST['wishing_price']
+        upc_name = str(username)+'-'+str(uniqlo_id)+'-'+str(original_color_code)+'-'+str(original_size)
+        print(' upc_name',upc_name)
+        targeted_item_to_be_edited_1 = catalogue.Product.objects.get(upc = upc_name)
+        targeted_item_to_be_edited_2 = catalogue.Application_Records.objects.filter(username=username)
+        targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.filter(UNIQLOID=uniqlo_id)
+        targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.filter(color_code=original_color_code)
+        targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.filter(wishing_price=original_wishing_price)
+        targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.get(size=original_size)
+        targeted_item_to_be_edited_2.wishing_price = wishing_price
+        targeted_item_to_be_edited_2.save()
+        targeted_item_to_be_edited_3 = partner.StockRecord.objects.get(product=targeted_item_to_be_edited_1)
+        #先改Product
+        title = str(targeted_item_to_be_edited_1.title)
+        revised_title = title.replace(original_wishing_price,wishing_price)
+        targeted_item_to_be_edited_1.title = revised_title
+        targeted_item_to_be_edited_1.save()
+        targeted_item_to_be_edited_3.price = wishing_price 
+        targeted_item_to_be_edited_3.save()       
+        #再改stockrecord
 
 
+    
+    # print(targeted_item_to_be_edited.color_code)
 
 
+    # print(targeted_item_to_be_edited)
+
+  
+    # unit = student.object.get(id=1)
+    # unit.cName = "ivankao"
+    # unit.save()
+    is_success = True
+    message = '成功修改!'
+    return render(request, template_name , locals())
+
+def reviseSellingItem(request):
+    template_name = 'oscar/customer/application/revise_success.html'
+    active_tab = 'application-records'
+    radio_name = 'check'
+    page_title = ('修改申請')
+    
+    username = request.user
+    uniqlo_id = request.POST['uniqlo_id']
+    color_code= request.POST['color_radio_btn']
+    original_color_code = request.POST['original_color_code']
+    size = request.POST['size_radio_btn']
+    original_size = request.POST['original_size']
+    quantity = request.POST['quantity']
+    original_quantity = request.POST['original_quantity']
+    wishing_price = request.POST['wishing_price']
+    original_wishing_price = request.POST['original_wishing_price']
+
+    #只能改價格
+
+    return render(request, template_name , locals())
+
+def saveChangeOfSellingItem(request):
+    template_name = 'oscar/customer/application/revise_success.html'
+    active_tab = 'application-records'
+    radio_name = 'check'
+    page_title = ('修改申請')
+    
+    username = request.user
+    uniqlo_id = request.POST['uniqlo_id']
+    color_code= request.POST['color_radio_btn']
+    original_color_code = request.POST['original_color_code']
+    size = request.POST['size_radio_btn']
+    original_size = request.POST['original_size']
+    quantity = request.POST['quantity']
+    original_quantity = request.POST['original_quantity']
+    wishing_price = request.POST['wishing_price']
+    original_wishing_price = request.POST['original_wishing_price']
+
+    targeted_item_to_be_edited = catalogue.Product.objects.filter(username=username)
+    targeted_item_to_be_edited = targeted_item_to_be_edited.filter(UNIQLOID=uniqlo_id)
+    targeted_item_to_be_edited = targeted_item_to_be_edited.filter(color_code=original_color_code)
+    targeted_item_to_be_edited = targeted_item_to_be_edited.filter(wishing_price=original_wishing_price)
+    targeted_item_to_be_edited = targeted_item_to_be_edited.get(size=original_size)
+    
+    targeted_item_to_be_edited.size = size
+    targeted_item_to_be_edited.quantity = quantity
+    targeted_item_to_be_edited.wishing_price = wishing_price
+    targeted_item_to_be_edited.save()
+
+    #只能改價格
+
+    is_success = True
+    message = '成功修改!'
+    return render(request, template_name , locals())
+    # print(targeted_item_to_be_edited.color_code)
 
 def collectInfo(request):
-    UQItems = models.UNIQLOItem.objects.all()
+    UQItems = catalogue.UNIQLOItem.objects.all()
     UQItem_list = list()
     for _, UQItem in enumerate(UQItems):
         UQItem_list.append("{}".format(str(UQItem) + "<br>"))
@@ -280,7 +427,7 @@ class GoodsInfoCollector:
 
     def search(self):
 
-        num_exists = models.UNIQLOItem.objects.filter(
+        num_exists = catalogue.UNIQLOItem.objects.filter(
             UNIQLOID=self.serialNumber)
         if num_exists.exists():
             print(self.serialNumber, self.title, '已经存在，不需要進行爬蟲')
@@ -469,14 +616,14 @@ class GoodsInfoCollector:
     # 將爬到的資料寫進資料庫
     def save(self):
 
-        order_exists = models.UNIQLOItem.objects.filter(
+        order_exists = catalogue.UNIQLOItem.objects.filter(
             UNIQLOID=self.serialNumber)
         if order_exists.exists():
             print(self.serialNumber, self.title, '已经存在')
             # ，现在更新数据，更新的数据id：',order_exists.last().id)
         else:
 
-            unit = models.UNIQLOItem.objects.create(
+            unit = catalogue.UNIQLOItem.objects.create(
                 UNIQLOID=self.serialNumber,
                 UNIQLOTitle=self.title,
                 OriginalPrice=self.price,

@@ -41,8 +41,11 @@ INSTALLED_APPS = [
     # official tutorial dashboard applications
     'mainsite.dashboard.apps.DashboardConfig',
     'mainsite.basket.apps.BasketConfig',
+    # 'mainsite.partner.apps.PartnerConfig',
+
     # 'mainsite.dashboard.orders.apps.OrdersDashboardConfig',
     # 'mainsite.dashboard.reports.apps.ReportsDashboardConfig',
+
 
     # non oscar apps
     'django.contrib.admin',
@@ -54,6 +57,7 @@ INSTALLED_APPS = [
     # oscar
     'django.contrib.sites',
     'django.contrib.flatpages',
+    
 
     'oscar.config.Shop',
     'oscar.apps.analytics.apps.AnalyticsConfig',

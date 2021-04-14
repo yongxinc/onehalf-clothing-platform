@@ -25,6 +25,8 @@
 {% else %}
 <form name='revise_apply' action='/accounts/revise_apply' method='POST'>
     {% csrf_token %}
+    <input type='hidden' name ='what_to_be_revised' value='application_submited'>
+
 
 
 <hr>
@@ -35,6 +37,7 @@
     <th>商品名稱</th>
     <th>顏色</th>
     <th>數量</th>
+    <th>尺寸</th>
     <th>欲售價格</th>
   </thead>
 <tbody>
@@ -44,17 +47,23 @@
     <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
     </td>
     <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
+    
     <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
-    <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
+    <td style="height:65px;" align='center' valign="middle"><small>{{record.color_code}}<br>{{record.color_name_ch}}</small></td> 
     <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
+    <td style="height:65px;" align='center' valign="middle"><small>{{record.size}}</small></td>
     <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
-    <td style="height:65px;" align='center' valign="middle"><input type="submit" value="修改"></td>
+    <td>
+        <input type="radio" id="check" name="check" value="{{record.UNIQLOID}},{{record.color_code}},{{record.size}},{{record.wishing_price}}">
+        <label for="check"> 修改 </label><br>
+        </td>  
 
 
 </tr>
 {% endfor %}
 </tbody>
 </table>
+<td style="height:65px;" align='center' valign="middle"><input type="submit" value="修改選取商品"></td>
 </form>
 {% endif%}
 <br>
@@ -72,7 +81,8 @@
         <th>商品名稱</th>
         <th>顏色</th>
         <th>數量</th>
-    
+        <th>尺寸</th>
+        <th>欲售價格</th>
       </thead>
     <tbody>
     {% for record in records_package_received %}
@@ -82,8 +92,9 @@
         </td>
         <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
-        <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.color_code}}<br>{{record.color_name_ch}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.size}}</small></td>
         <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
 
     </tr>
@@ -102,15 +113,18 @@
 {% if records_on_selling_is_empty %}
 無資料
 {% else %}
-<table style="padding:3px;" rules="all" cellpadding='8'; >
+<form name='revise_apply' action='/accounts/revise_apply' method='POST'>
+    <input type='hidden' name ='what_to_be_revised' value='selling_item'>
+    {% csrf_token %}
+    <table style="padding:3px;" rules="all" cellpadding='8'; >
     <thead>
         <th>商品圖片</th>
-        <th>商品序號</th>
-        <th>商品名稱</th>
-        <th>顏色</th>
-        <th>數量</th>
-        <th>欲售價格</th>
-        <th>修改</th>
+    <th>商品序號</th>
+    <th>商品名稱</th>
+    <th>顏色</th>
+    <th>數量</th>
+    <th>尺寸</th>
+    <th>欲售價格</th>
       </thead>
     <tbody>
     {% for record in records_on_selling %}
@@ -120,16 +134,21 @@
         </td>
         <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
-        <td style="height:65px;" align='center' valign="middle"><small>{{record.color_name_ch}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.color_code}}<br>{{record.color_name_ch}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.size}}</small></td>
         <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
-
+        <td>
+            <input type="radio" id="check" name="check" value="{{record.UNIQLOID}},{{record.color_code}},{{record.size}},{{record.wishing_price}}">
+            <label for="check"> 修改 </label><br>
+            </td>  
 
     
     </tr>
     {% endfor %}
     </tbody>
     </table>
-
+    <td style="height:65px;" align='center' valign="middle"><input type="submit" value="修改選取商品"></td>
+</form>
 {% endif %}
 {% endblock  %}

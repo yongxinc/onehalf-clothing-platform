@@ -1,0 +1,149 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+{% load custom_tags %}
+{% block content %}
+
+{% if what_to_be_revised == 'application_submited'%}
+  <form name='apply' action='/accounts/seller-save-change' method='POST'>
+    {% csrf_token %}
+  <input type="hidden" id="what_now_revising" name="what_now_revising" value="application_submited">
+   <input type="hidden" id="uniqlo_id" name="uniqlo_id" value={{ uniqlo_id }}>
+   <input type="hidden" id="original_color_code" name="original_color_code" value={{ color_code }}>
+   <input type="hidden" id="original_size" name="original_size" value={{ size }}>
+   <input type="hidden" id="original_quantity" name="original_quantity" value={{ quantity }}>
+   <input type="hidden" id="original_wishing_price" name="original_wishing_price" value={{ wishing_price }}>
+
+   <br><br>
+
+   <label><b>商品圖片|商品顏色</b></label><br><hr>
+   <img src="https://im.uniqlo.com/images/tw/uq/pc/goods/{{ uniqlo_id }}/item/{{ color_code }}_{{ uniqlo_id }}.jpg" style="width:130px;height:130px;">&nbsp
+   <img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{uniqlo_id}}/chip/{{color_code}}_{{uniqlo_id}}.gif  style="width:130px;height:130px;">
+   
+   <br><hr><br>
+
+   <label for="color_radio_btn"><b>商品顏色</b></label><br>
+   {% for key,value in color_dict.items %}
+    {% if looptimes|count:'0' == 6%}
+      <hr>
+    {% endif %}
+  
+    {% if key == color_code %} 
+    <input type="radio" id="color_radio_btn" name="color_radio_btn" value={{key}} checked="checked">
+    {% else %}
+    <input type="radio" id="color_radio_btn" name="color_radio_btn" value={{key}}>
+    {% endif %}
+    <label for={{key}}> <img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{uniqlo_id}}/chip/{{key}}_{{uniqlo_id}}.gif  alt={{value}} style="width:70px;height:70px;"><br> {{value}} </label> 
+    &nbsp&nbsp&nbsp
+   <!-- <label for={{item}}><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{uniqlo_id}}/item/{{color}}_{{uniqlo_id}}.jpg  style="width:70px;height:70px;"></label>  -->
+    {% endfor %}
+    {{ none|reset:'0' }}
+
+    <hr><br>
+
+    <label for="size_radio_btn"><b>商品尺寸</b></label><br>
+
+    {% if size == 'XXS' %}
+    <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XXS' checked="checked">
+    {% else %}
+    <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XXS'>
+     {% endif %}
+   <label for='XXS'>XXS </label>  |
+    
+   {% if size == 'XS' %}
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XS' checked="checked">
+   {% else %}
+   <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XS'>
+    {% endif %}
+  <label for='XS'>XS </label>  |
+
+  {% if size == 'S' %}
+  <input type="radio" id="size_radio_btn" name="size_radio_btn" value='S' checked="checked">
+  {% else %}
+  <input type="radio" id="size_radio_btn" name="size_radio_btn" value='S'>
+   {% endif %}
+ <label for='S'>S </label>  |
+
+ {% if size == 'M' %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='M' checked="checked">
+ {% else %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='M'>
+  {% endif %}
+<label for='M'>M </label>  |
+
+{% if size == 'L' %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='L' checked="checked">
+ {% else %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='L''>
+  {% endif %}
+<label for='L'>L </label>  |
+
+{% if size == 'XL' %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XL' checked="checked">
+ {% else %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XL'>
+  {% endif %}
+<label for='XL'>XL </label>  |
+
+{% if size == 'XXL' %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XXL' checked="checked">
+ {% else %}
+ <input type="radio" id="size_radio_btn" name="size_radio_btn" value='XL'>
+  {% endif %}
+<label for='XXL'>XXL </label> 
+
+   <br><hr><br>
+
+   <label for="quantity"><b>數量</b></label><br>
+
+    <select name="quantity" id="quantity">
+    <option value="1">&nbsp;&nbsp;&nbsp;1</option>
+    <option value="2">&nbsp;&nbsp;&nbsp;2</option>
+    <option value="3">&nbsp;&nbsp;&nbsp;3</option>
+    <option value="4">&nbsp;&nbsp;&nbsp;4</option>
+    <option value="5">&nbsp;&nbsp;&nbsp;5</option>
+    </select>
+    <br>
+    <hr>
+    <br>
+    <label for="wishing_price"><b>欲售價格&nbsp/&nbsp原價</b></label><br>
+    $<input type="text" id="wishing_price" name="wishing_price" value={{wishing_price}} size=4>&nbsp / &nbsp ${{original_price}}
+    <br>
+    <hr>
+    <br>
+    <input type='submit' value='送出申請'>
+    <input type='reset' value='清除重填'>
+    
+</form>
+{% endif %}
+{% if what_to_be_revised == 'selling_item'%}
+<form name='apply' action='/accounts/seller-save-change' method='POST'>
+  {% csrf_token %}
+  <input type="hidden" id="what_now_revising" name="what_now_revising" value="selling_item">
+  <input type="hidden" id="sellerID" name="sellerID" value={{ sellerID }}>
+  <input type="hidden" id="uniqlo_id" name="uniqlo_id" value={{ uniqlo_id }}>
+  <input type="hidden" id="original_color_code" name="original_color_code" value={{ color_code }}>
+  <input type="hidden" id="original_size" name="original_size" value={{ size }}>
+  <input type="hidden" id="original_quantity" name="original_quantity" value={{ quantity }}>
+  <input type="hidden" id="original_wishing_price" name="original_wishing_price" value={{ wishing_price }}>
+ 
+  <br><br>
+ <label><b>商品圖片 | 商品顏色</b></label><br><hr>
+
+ <img src="https://im.uniqlo.com/images/tw/uq/pc/goods/{{ uniqlo_id }}/item/{{ color_code }}_{{ uniqlo_id }}.jpg" style="width:130px;height:130px;">&nbsp
+ <img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{uniqlo_id}}/chip/{{color_code}}_{{uniqlo_id}}.gif  style="width:130px;height:130px;">
+ <br>
+<hr>
+ <br>
+ 
+  <br>
+  <label for="wishing_price"><b>欲售價格&nbsp/&nbsp原價</b></label><br>
+  <input type="hidden" id="original_wishing_price" name="original_wishing_price" value={{ wishing_price }}>
+  $<input type="text" id="wishing_price" name="wishing_price" value={{wishing_price}} size=4>&nbsp / &nbsp ${{original_price}}
+  <br>
+  <hr>
+  <br>
+  <input type='submit' value='送出申請'>
+  <input type='reset' value='清除重填'>
+  
+</form>
+{% endif %}
+{% endblock  %}

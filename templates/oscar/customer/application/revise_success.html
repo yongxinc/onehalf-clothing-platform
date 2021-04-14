@@ -1,0 +1,13 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+
+{% block content %}
+
+{% if not is_success %}
+<b><font color=#AE0000>{{ message }}</font></b>
+{% endif %}
+
+{% if is_success %}
+<b><font color=#003D79>{{ message }}</font></b>
+{% endif %}
+
+{% endblock  %}
