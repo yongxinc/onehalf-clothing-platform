@@ -3,6 +3,7 @@
 from django.db import models
 from oscar.apps.catalogue.abstract_models import AbstractProduct, AbstractOption, AbstractProductAttributeValue
 from datetime import date
+from datetime import datetime
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from oscar.models.fields import AutoSlugField, NullCharField
@@ -108,8 +109,13 @@ class Application_Records(models.Model):
     color_name_eng = models.CharField(max_length=20, default='')
     wishing_price = models.IntegerField(default=0)
     quantity = models.IntegerField(default=0)
+    add_date = models.DateTimeField('儲存日期',default = timezone.now())
+    mod_date = models.DateTimeField('最後修改日期', auto_now = True)
+    instock_date = models.DateTimeField('上架日期', default = timezone.now())
+    product = models.ForeignKey('product',on_delete=models.CASCADE, null=True, blank=True)
+
     def __str__(self):
-        return self.username + ' | ' +self.UNIQLOID +  ' | ' +self.title +  ' | '+ self.status 
+        return self.username + ' | ' +self.UNIQLOID +  ' | ' +self.title +  ' | '+ self.status  +  ' | '+ '儲存日期 ' +str(self.add_date.date()) + ' | 最後修改時間 ' + str(self.mod_date.date()) + str(self.instock_date.date())
     class Meta:
         ordering = ['username', 'UNIQLOID']
 

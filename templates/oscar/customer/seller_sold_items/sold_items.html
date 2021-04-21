@@ -1,0 +1,49 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+{% load custom_tags %}
+
+{% block content %}
+<br>
+<small>您可以在此查詢銷售收入以及已售出品項<br>若您欲申請提領餘額，請來信至 <a href = onehalf.serveice@gmail.co>myonehalf.service@gmail.com</a> ，將有專人為您處理相關事宜。</small>
+<br><br><br>
+<h3><b>➜ 銷售總額與餘額</b></h3><hr>
+<table style="padding:3px;" rules="all" cellpadding='8';>
+    <thead>
+        <tr>
+            <th>銷售總額</th>
+            <th>餘額</th>
+            <th>已提領</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>${{sellerRevenue.totalRevenue}}</td>
+            <td>${{sellerRevenue.balance}}</td>
+            <td>${{sellerRevenue.withdrawn}}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<br>
+<br>
+<h3><b>➜ 已售出之商品</b></h3><hr>
+
+<table style="padding:3px;" rules="all" cellpadding='8';>
+    <thead>
+        <tr>
+            <th>品項</th><th>金額</th><th>售出日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sold in orders_line%}
+            <tr>
+                <td><small>{{sold.product.title}}</small></td>
+                <td><small>${{sold.line_price_incl_tax}}</small></td>
+                <td><small>{{sold.order.date_placed.date}}</small></td>
+            </tr></small>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock  %}

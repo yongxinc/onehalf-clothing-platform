@@ -17,6 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 #商店基本資訊
 OSCAR_SHOP_NAME = 'onehalf'
+OSCAR_SHOP_TAGLINE = 'uniqlo二手衣平台'
+OSCAR_DEFAULT_CURRENCY = 'NTD'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -183,11 +185,10 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-US'
 TIME_ZONE = 'Asia/Taipei'
 
+
 USE_I18N = True
-
 USE_L10N = True
-
-USE_TZ = True
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

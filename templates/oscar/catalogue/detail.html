@@ -117,14 +117,14 @@
         {% if product.upc %}
         <tr>
             <th>{% trans "UPC" %}</th><td>{{ product.upc }}</td>
+            
         </tr> 
+        
         {% endif %}
         <!-- <tr>
             <th>{% trans "Product Type" %}</th><td>{{ product.get_product_class.name }}</td>
         </tr> -->
-      
 
-      
         {% purchase_info_for_product request product as session %}
         {% if session.price.exists %}
             <!-- <tr>
@@ -155,6 +155,24 @@
                 <td>{{ product.num_approved_reviews }}</td>
             </tr>
         {% endiffeature %} 
+
+        {% if product.structure == 'child' %}
+        <tr>
+            <th>尺寸表</th><td>
+                <a href="http://www.uniqlo.com/tw/store/support/size/{{product.parent.upc}}_size.html" target="_new">
+                    <img src=https://cdn3.iconfinder.com/data/icons/clothes-size/635/2-512.png width=50 length=50>
+                </a><small>(點擊開啟新視窗)</small></td>
+        </tr>
+        {% endif %}
+        {% if product.structure == 'parent' %}
+        <tr>
+            <th>尺寸表</th><td>
+                <a href="http://www.uniqlo.com/tw/store/support/size/{{product.upc}}_size.html" target="_new">
+                    <img src=https://cdn3.iconfinder.com/data/icons/clothes-size/635/2-512.png width=50 length=50>
+                </a><small>(點擊開啟新視窗)</small></td>
+        </tr>
+        {% endif %}
+        
     </table>
     {% endblock %}
 <hr>

@@ -14,7 +14,9 @@ import selenium
 from bs4 import BeautifulSoup
 import json
 from .catalogue import models as catalogue
-from oscar.apps.partner import models as partner
+from oscar.apps.order import models as oscar_order
+from .order import models as order
+from oscar.apps.partner import models as oscar_partner
 from django.views import generic
 from django.views.generic import (
     ListView, CreateView
@@ -121,7 +123,6 @@ def sellerApplyReceiveSerialNumber(request):
         message = '此商品不存在! 請確認是否輸入正確的商品序號!'
         print(message)
         return render(request, template_name_source, locals())
-    
 
 def sellerApplyProcessInfo(request):
     active_tab = 'application'
@@ -146,6 +147,7 @@ def sellerApplyProcessInfo(request):
         title = item.UNIQLOTitle
         ## 要寫入的資料
         color_queryset = all_colors.filter(color_code=color_code)
+        print(color_queryset)
         color_name = color_queryset[0].color_name
         color_name_ch = color_queryset[0].color_name_ch
         # color_ch = color_ch,  color_eng = color_eng
@@ -164,24 +166,36 @@ def sellerApplyProcessInfo(request):
  
     return render(request, 'oscar/customer/application/application_submit_success.html', locals())
 
+#上架申請查詢
 def sellerApplyRecords(request):
-    #todo-可查尋 可修改 可刪除
-    template_name = 'oscar/customer/application/records.html'
+    #頁面基本元素設定
+    template_name = 'oscar/customer/application/records.html' 
     page_title = ('上架申請查詢')
     active_tab = 'application-records'
-    user = request.user
-    all_records = catalogue.Application_Records.objects.filter(username=request.user)
+    
+    user = request.user #會員名稱
+
+    all_records = catalogue.Application_Records.objects.filter(username=request.user) #取得該會員的相關申請紀錄
     status_list = ['application_submited', 'package_received','on_selling']
+    
+    # 申請已提交，但平台尚未收到賣家寄來的商品
     records_application_submited = all_records.filter(status=status_list[0])
     if len(records_application_submited) == 0 :
         records_application_submited_is_empty = True
     else:
         records_application_submited_is_empty = False
+
+    # 平台已收到賣家寄來的商品，審查中
     records_package_received = all_records.filter(status=status_list[1])
     if len(records_package_received) == 0 :
         records_package_received_is_empty = True
     else:
         records_package_received_is_empty = False
+
+    # 已上架商品   
+    #用會員名稱+色碼+尺寸來抓到product然後再抓slug
+    products =  catalogue.Application_Records.objects.filter(username=user)
+
     records_on_selling = all_records.filter(status=status_list[2])
     if len(records_on_selling) == 0 :
         records_on_selling_is_empty = True
@@ -189,10 +203,49 @@ def sellerApplyRecords(request):
         records_on_selling_is_empty = False
     return render(request, template_name, locals())
 
-
 def sellerSoldItem(request):
-    return render(request, 'index.html' , locals())
+    page_title = ('個人銷售紀錄查詢')
 
+    active_tab = 'sold-items'
+    template = 'oscar/customer/seller_sold_items/sold_items.html'
+    user = request.user
+    orders = order.Order.objects.filter(user=user)
+    partner = oscar_partner.Partner.objects.get(name=user)
+    orders_line = order.Line.objects.filter(partner=partner)
+
+    # Update seller revenue資料(?)
+    
+    
+    try:#看看sellerRevenue是不是有這位賣家的資料
+        sellerRevenue = order.SellerRevenue.objects.get(seller=partner)
+    except:#如果沒有，就新增
+        print('不存在',partner,'所以新增一筆SellerRevenue')
+        sellerRevenue = order.SellerRevenue(seller=partner,balance=0,withdrawn=0)
+        sellerRevenue.save()
+        # sellerRevenue = oscar.SellerRevenue.objects.get(seller = partner)
+
+
+    totalRevenue = 0 #個人銷售總額 要另外計算的
+    withdrawn = sellerRevenue.withdrawn
+
+    # 計算個人銷售總額(totalRevenue)
+    for line in orders_line:
+        totalRevenue += line.line_price_incl_tax
+        # print(line.line_price_incl_tax)
+
+    #計算餘額
+    balance = totalRevenue - withdrawn
+
+    #存回去SellerRevenue
+    sellerRevenue.balance = balance
+    sellerRevenue.withdrawn = withdrawn
+    sellerRevenue.totalRevenue = totalRevenue
+    sellerRevenue.save()
+    
+    # print('totalRevenue',totalRevenue,'balance',balance,'withdrawn',withdrawn)
+    
+
+    return render(request, template , locals())
 
 def reviseApplicationOrSellingItem(request):
     template_name = 'oscar/customer/application/revise_submitted_item.html'
@@ -248,6 +301,13 @@ def saveChange(request):
         targeted_item_to_be_edited = targeted_item_to_be_edited.filter(wishing_price=original_wishing_price)
         targeted_item_to_be_edited = targeted_item_to_be_edited.get(size=original_size)
         targeted_item_to_be_edited.color_code = color_code
+
+        color_item = catalogue.color.objects.get(color_code=color_code)
+        color_name_ch = color_item.color_name_ch
+        color_name_eng = color_item.color_name
+
+        targeted_item_to_be_edited.color_name_ch = color_name_ch
+        targeted_item_to_be_edited.color_name_eng = color_name_eng
         targeted_item_to_be_edited.size = size
         targeted_item_to_be_edited.quantity = quantity
         targeted_item_to_be_edited.wishing_price = wishing_price
@@ -265,7 +325,7 @@ def saveChange(request):
         targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.get(size=original_size)
         targeted_item_to_be_edited_2.wishing_price = wishing_price
         targeted_item_to_be_edited_2.save()
-        targeted_item_to_be_edited_3 = partner.StockRecord.objects.get(product=targeted_item_to_be_edited_1)
+        targeted_item_to_be_edited_3 = oscar_partner.StockRecord.objects.get(product=targeted_item_to_be_edited_1)
         #先改Product
         title = str(targeted_item_to_be_edited_1.title)
         revised_title = title.replace(original_wishing_price,wishing_price)
@@ -289,62 +349,6 @@ def saveChange(request):
     is_success = True
     message = '成功修改!'
     return render(request, template_name , locals())
-
-def reviseSellingItem(request):
-    template_name = 'oscar/customer/application/revise_success.html'
-    active_tab = 'application-records'
-    radio_name = 'check'
-    page_title = ('修改申請')
-    
-    username = request.user
-    uniqlo_id = request.POST['uniqlo_id']
-    color_code= request.POST['color_radio_btn']
-    original_color_code = request.POST['original_color_code']
-    size = request.POST['size_radio_btn']
-    original_size = request.POST['original_size']
-    quantity = request.POST['quantity']
-    original_quantity = request.POST['original_quantity']
-    wishing_price = request.POST['wishing_price']
-    original_wishing_price = request.POST['original_wishing_price']
-
-    #只能改價格
-
-    return render(request, template_name , locals())
-
-def saveChangeOfSellingItem(request):
-    template_name = 'oscar/customer/application/revise_success.html'
-    active_tab = 'application-records'
-    radio_name = 'check'
-    page_title = ('修改申請')
-    
-    username = request.user
-    uniqlo_id = request.POST['uniqlo_id']
-    color_code= request.POST['color_radio_btn']
-    original_color_code = request.POST['original_color_code']
-    size = request.POST['size_radio_btn']
-    original_size = request.POST['original_size']
-    quantity = request.POST['quantity']
-    original_quantity = request.POST['original_quantity']
-    wishing_price = request.POST['wishing_price']
-    original_wishing_price = request.POST['original_wishing_price']
-
-    targeted_item_to_be_edited = catalogue.Product.objects.filter(username=username)
-    targeted_item_to_be_edited = targeted_item_to_be_edited.filter(UNIQLOID=uniqlo_id)
-    targeted_item_to_be_edited = targeted_item_to_be_edited.filter(color_code=original_color_code)
-    targeted_item_to_be_edited = targeted_item_to_be_edited.filter(wishing_price=original_wishing_price)
-    targeted_item_to_be_edited = targeted_item_to_be_edited.get(size=original_size)
-    
-    targeted_item_to_be_edited.size = size
-    targeted_item_to_be_edited.quantity = quantity
-    targeted_item_to_be_edited.wishing_price = wishing_price
-    targeted_item_to_be_edited.save()
-
-    #只能改價格
-
-    is_success = True
-    message = '成功修改!'
-    return render(request, template_name , locals())
-    # print(targeted_item_to_be_edited.color_code)
 
 def collectInfo(request):
     UQItems = catalogue.UNIQLOItem.objects.all()

@@ -7,17 +7,22 @@
 <b>您可以在此查詢已送出之申請狀態，寄出商品時煩請您留意以下幾點注意事項：</b>
 <li>本平台僅接受<b>9成新</b>以上之UNIQLO衣物</li>
 <li>若商品不符規格將通知您，請您<b>自費退回</b></li>
-<li>寄出時需要麻煩您連同寫好／印好<b>商品項目之明細表</b>連同商品一起寄出，以下格式可供參考：</li>
+<li>寄出時需要麻煩您連同寫好／印好<b>商品項目之明細表</b>連同商品一起寄出，以下為寄件資訊以及供參考之明細表格式：</li>
 <hr><cite>
 <font color=#696969>
-&nbsp&nbsp&nbsp&nbsp&nbsp註冊信箱：xxxxxxxxxxx@gmail.com<br>
+➜ 寄件資訊<br>
+收件地址：台北市大安區XX路XX號 onehalf 收 <br>
+收件地址電話：0912-345-678<br><br>
+
+➜ 明細表格式參考<br>
+&nbsp&nbsp&nbsp&nbsp&nbsp註冊信箱：xxxxxxxxxxx@gmail.com&nbsp(請填您的註冊信箱)<br>
 &nbsp&nbsp&nbsp&nbsp&nbsp包裹內含以下商品<br>
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp1. 436612 水洗設計褲裙 綠色 1件<br>
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp2. 437592 設計羅紋方領T恤(短袖) 紅色 1件<br>
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp3. 437592 設計羅紋方領T恤(短袖) 橙色 1件<br>
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(商品編號／品名／顏色／數量)
 </font></cite></small>
-<hr>
+<br><br><br>
 <h4><b>➜ 申請已提交，但平台尚未收到賣家寄來的商品</b></h4>
 {% if records_application_submited_is_empty %}
 無資料
@@ -26,12 +31,10 @@
 <form name='revise_apply' action='/accounts/revise_apply' method='POST'>
     {% csrf_token %}
     <input type='hidden' name ='what_to_be_revised' value='application_submited'>
-
-
-
 <hr>
 <table style="padding:3px;" rules="all" cellpadding='8'; >
 <thead>
+    <th>新增日期</th>
     <th>商品圖片</th>
     <th>商品序號</th>
     <th>商品名稱</th>
@@ -43,7 +46,7 @@
 <tbody>
 {% for record in records_application_submited %}
 <tr>
- 
+    <td style="height:65px;" align='center' valign="middle"><small>{{record.add_date.date}}</small></td>
     <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
     </td>
     <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
@@ -108,7 +111,7 @@
 <h4><b>➜ 已上架商品</b></h4>
 <small>
 <b>您可以在此區塊查詢已上架進行販售的商品，若要查看已售出的商品，請至「已售出商品」</b>
-<li>若一品項同一尺寸有許多賣家同時寄賣，本平台將以收到商品之順序進行銷售。</li></small>
+<li>已上架商品只能根據價錢進行修改</li></small>
 <hr>
 {% if records_on_selling_is_empty %}
 無資料
@@ -118,6 +121,7 @@
     {% csrf_token %}
     <table style="padding:3px;" rules="all" cellpadding='8'; >
     <thead>
+        <th>上架日期</th>
         <th>商品圖片</th>
     <th>商品序號</th>
     <th>商品名稱</th>
@@ -129,11 +133,11 @@
     <tbody>
     {% for record in records_on_selling %}
     <tr>
-     
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.instock_date.date}}</small></td>
         <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
         </td>
         <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
-        <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small><a href =http://127.0.0.1:8000/catalogue/{{record.product.slug}}_{{record.product.id}}/ >{{record.title}}</a></small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.color_code}}<br>{{record.color_name_ch}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
         <td style="height:65px;" align='center' valign="middle"><small>{{record.size}}</small></td>
@@ -142,7 +146,6 @@
             <input type="radio" id="check" name="check" value="{{record.UNIQLOID}},{{record.color_code}},{{record.size}},{{record.wishing_price}}">
             <label for="check"> 修改 </label><br>
             </td>  
-
     
     </tr>
     {% endfor %}
@@ -150,5 +153,8 @@
     </table>
     <td style="height:65px;" align='center' valign="middle"><input type="submit" value="修改選取商品"></td>
 </form>
+
 {% endif %}
+
+
 {% endblock  %}
