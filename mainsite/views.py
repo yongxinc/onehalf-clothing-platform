@@ -193,9 +193,6 @@ def sellerApplyRecords(request):
         records_package_received_is_empty = False
 
     # 已上架商品   
-    #用會員名稱+色碼+尺寸來抓到product然後再抓slug
-    products =  catalogue.Application_Records.objects.filter(username=user)
-
     records_on_selling = all_records.filter(status=status_list[2])
     if len(records_on_selling) == 0 :
         records_on_selling_is_empty = True
