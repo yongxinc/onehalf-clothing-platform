@@ -1,0 +1,46 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+{% load custom_tags %}
+
+{% block content %}
+
+{% if account_info_completed %}
+{% csrf_token %}
+{{ message }}<br><br>
+<form name='bank-info-submit' action='/accounts/seller-banking-withdraw-sent' method='POST'>
+    {% csrf_token %}
+<label>銀行代碼：</label>
+<input name=bank_code id=bank_code value={{ bank_code }} readonly disabled> <br>
+<label>銀行及分行名稱：</label>
+<input name=bank_name id=bank_name  value={{ bank_name }} readonly disabled> <br>
+<label>帳號：</label>
+<input name=bank_account id=bank_account value={{ bank_account }} readonly disabled>
+<br><br>
+    <input type='submit' class="btn btn-success" value='是，帳務資訊正確，我要送出領款申請'>
+    <button type="button" class="btn btn-warning"  onclick="location.href='seller-banking-edit'">否，我要修改帳戶資訊</button><br>
+    <input type="hidden" id="what_to_be_process" name="what_to_be_process" value='exist_account_info'>
+</form>
+{% endif %}
+
+{% if not account_info_completed %}
+<!-- 填寫 -->        <br>{{message}}<br><br>
+
+<form name='bank-info-submit' action='/accounts/seller-banking-withdraw-sent' method='POST'>
+    {% csrf_token %}
+        <label for="bank_code">銀行代碼：</label>
+        <input type="text" name=bank_code id=bank_code placeholder="EX: 100" required><br>
+
+        <label for="bank_name">銀行及分行名稱：</label>
+        <input type="text" name=bank_name id=bank_name placeholder="EX: 中國信託員林分行" required><br>
+
+        <label for="bank_account">帳號：</label>
+        <input type="text" name=bank_account id=bank_account placeholder="EX: 85699935-8569245" required><br>
+
+        <input type='submit' class="btn btn-success" value='送出提款申請'>
+        <input type='reset' class="btn btn-light" value='清除重填'>
+        <input type="hidden" id="what_to_be_process" name="what_to_be_process" value='new_account_info'>
+
+</form>
+
+{% endif %}
+
+{% endblock  %}

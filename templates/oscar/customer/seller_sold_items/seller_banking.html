@@ -1,0 +1,78 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+{% load custom_tags %}
+
+{% block content %}
+
+<br>
+{% if not have_revenue_record %}
+您未有任何銷售紀錄，無法申請提領餘額！<br><br>
+<table style="padding:3px;" rules="all" cellpadding='8';>
+    <thead>
+        <tr>
+            <th>銷售總額</th>
+            <th>餘額</th>
+            <th>已提領</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>${{totalRevenue}}</td>
+            <td>${{withdrawn}}</td>
+            <td>${{balance}}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+
+{% endif %}
+
+{% if have_revenue_record %}
+
+{% if sellerRevenue.balance == 0 %}
+您目前沒有餘額可以提領！ <br><br>
+
+<table style="padding:3px;" rules="all" cellpadding='8';>
+    <thead>
+        <tr>
+            <th>銷售總額</th>
+            <th>餘額</th>
+            <th>已提領</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>${{sellerRevenue.totalRevenue}}</td>
+            <td>${{sellerRevenue.balance}}</td>
+            <td>${{sellerRevenue.withdrawn}}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% else %}
+
+
+以下是您的帳戶餘額訊息，若欲提領餘額，請點選「我要提領帳戶餘額」
+<br><br>
+<table style="padding:3px;" rules="all" cellpadding='8';>
+    <thead>
+        <tr>
+            <th>銷售總額</th>
+            <th>餘額</th>
+            <th>已提領</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>${{sellerRevenue.totalRevenue}}</td>
+            <td>${{sellerRevenue.balance}}</td>
+            <td>${{sellerRevenue.withdrawn}}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<button type="button" class="btn btn-primary"  onclick="location.href='seller-banking-withdraw'">我要提領帳戶餘額</button>
+
+{% endif %}
+{% endif %}
+
+{% endblock  %}

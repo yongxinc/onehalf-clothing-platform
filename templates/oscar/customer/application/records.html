@@ -45,6 +45,7 @@
   </thead>
 <tbody>
 {% for record in records_application_submited %}
+
 <tr>
     <td style="height:65px;" align='center' valign="middle"><small>{{record.add_date.date}}</small></td>
     <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
@@ -57,7 +58,7 @@
     <td style="height:65px;" align='center' valign="middle"><small>{{record.size}}</small></td>
     <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
     <td>
-        <input type="radio" id="check" name="check" value="{{record.UNIQLOID}},{{record.color_code}},{{record.size}},{{record.wishing_price}}">
+        <input type="radio"  id="check" name="check" value="{{record.UNIQLOID}},{{record.color_code}},{{record.size}},{{record.wishing_price}}">
         <label for="check"> 修改 </label><br>
         </td>  
 
@@ -66,7 +67,8 @@
 {% endfor %}
 </tbody>
 </table>
-<td style="height:65px;" align='center' valign="middle"><input type="submit" value="修改選取商品"></td>
+<td style="height:65px;" align='center' valign="middle"><br>
+    <input type="submit" class="btn btn-primary" value="修改選取商品"></td>
 </form>
 {% endif%}
 <br>
@@ -151,7 +153,8 @@
     {% endfor %}
     </tbody>
     </table>
-    <td style="height:65px;" align='center' valign="middle"><input type="submit" value="修改選取商品"></td>
+    <td style="height:65px;" align='center' valign="middle"><br>
+        <input type="submit" class="btn btn-primary" value="修改選取商品"></td>
 </form>
 
 {% endif %}

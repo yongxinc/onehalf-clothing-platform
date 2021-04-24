@@ -6,6 +6,13 @@
 <small>您可以在此查詢銷售收入以及已售出品項<br>若您欲申請提領餘額，請來信至 <a href = onehalf.serveice@gmail.co>myonehalf.service@gmail.com</a> ，將有專人為您處理相關事宜。</small>
 <br><br><br>
 <h3><b>➜ 銷售總額與餘額</b></h3><hr>
+
+{% if not have_sold_items %}
+{{ message }}
+
+{% endif %}
+
+{% if have_sold_items %}
 <table style="padding:3px;" rules="all" cellpadding='8';>
     <thead>
         <tr>
@@ -22,27 +29,39 @@
         </tr>
     </tbody>
 </table>
+{% endif%}
+
 <br>
 <br>
 <br>
 <h3><b>➜ 已售出之商品</b></h3><hr>
+{% if not have_sold_items %}
+{{ message }}
 
-<table style="padding:3px;" rules="all" cellpadding='8';>
-    <thead>
-        <tr>
-            <th>品項</th><th>金額</th><th>售出日期</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for sold in orders_line%}
+{% endif %}
+{% if have_sold_items %}
+
+    <table style="padding:3px;" rules="all" cellpadding='8';>
+        <thead>
             <tr>
-                <td><small>{{sold.product.title}}</small></td>
-                <td><small>${{sold.line_price_incl_tax}}</small></td>
-                <td><small>{{sold.order.date_placed.date}}</small></td>
-            </tr></small>
-        {% endfor %}
-    </tbody>
-</table>
+                <th>品項</th><th>金額</th><th>售出日期</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sold in orders_line%}
+                <tr>
+                    <td><small>{{sold.product.title}}</small></td>
+                    <td><small>${{sold.line_price_incl_tax}}</small></td>
+                    <td><small>{{sold.order.date_placed.date}}</small></td>
+                </tr></small>
+            {% endfor %}
+
+            
+        </tbody>
+    </table>
+
+{% endif %}
+
 
 
 

@@ -13,10 +13,18 @@ import requests
 import selenium
 from bs4 import BeautifulSoup
 import json
-from .catalogue import models as catalogue
+from .catalogue import models as catalogue_model
+from .seller import models as seller_model
 from oscar.apps.order import models as oscar_order
 from .order import models as order
 from oscar.apps.partner import models as oscar_partner
+from oscar.apps.customer import models as oscar_customer
+
+from datetime import date
+from datetime import datetime
+from django.utils import timezone
+
+from .seller import forms as seller_form
 from django.views import generic
 from django.views.generic import (
     ListView, CreateView
@@ -103,7 +111,7 @@ def sellerApplyReceiveSerialNumber(request):
     uniqlo_id = uniqlo_id.strip()
     print('post',request.POST['sellerID'],'輸入了商品序號',request.POST['itemID'])
     try:
-        item = catalogue.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+        item = catalogue_model.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
         uniqlo_title = item.UNIQLOTitle
         uniqlo_title_imgs_url_list = getTitleImagesFromJSON(item)
         original_price = item.OriginalPrice
@@ -139,10 +147,10 @@ def sellerApplyProcessInfo(request):
     print('欲售價格',request.POST['wishing_price'])
     seller_id = request.POST['sellerID']
     print('用戶',request.POST['sellerID'])
-    all_colors = catalogue.color.objects.all()
+    all_colors = catalogue_model.color.objects.all()
     
     # try:
-    item = catalogue.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+    item = catalogue_model.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
     if item != None:
         title = item.UNIQLOTitle
         ## 要寫入的資料
@@ -152,7 +160,7 @@ def sellerApplyProcessInfo(request):
         color_name_ch = color_queryset[0].color_name_ch
         # color_ch = color_ch,  color_eng = color_eng
         status = 'application_submited'
-        record = catalogue.Application_Records(username=seller_id, status=status, UNIQLOID=uniqlo_id,color_name_eng=color_name,color_name_ch=color_name_ch, title = title, size=size, color_code=color_code, wishing_price=wishing_price,quantity = quantity)
+        record = catalogue_model.Application_Records(username=seller_id, status=status, UNIQLOID=uniqlo_id,color_name_eng=color_name,color_name_ch=color_name_ch, title = title, size=size, color_code=color_code, wishing_price=wishing_price,quantity = quantity)
         record.save()
         is_success = True
         message =  '成功提交申請! 可至「上架申請查詢」查詢相關申請！'
@@ -175,7 +183,7 @@ def sellerApplyRecords(request):
     
     user = request.user #會員名稱
 
-    all_records = catalogue.Application_Records.objects.filter(username=request.user) #取得該會員的相關申請紀錄
+    all_records = catalogue_model.Application_Records.objects.filter(username=request.user) #取得該會員的相關申請紀錄
     status_list = ['application_submited', 'package_received','on_selling']
     
     # 申請已提交，但平台尚未收到賣家寄來的商品
@@ -206,7 +214,7 @@ def sellerSoldItem(request):
     active_tab = 'sold-items'
     template = 'oscar/customer/seller_sold_items/sold_items.html'
     user = request.user
-    orders = order.Order.objects.filter(user=user)
+    # orders = order.Order.objects.filter(user=user)
     partner = oscar_partner.Partner.objects.get(name=user)
     orders_line = order.Line.objects.filter(partner=partner)
 
@@ -215,32 +223,153 @@ def sellerSoldItem(request):
     
     try:#看看sellerRevenue是不是有這位賣家的資料
         sellerRevenue = order.SellerRevenue.objects.get(seller=partner)
-    except:#如果沒有，就新增
-        print('不存在',partner,'所以新增一筆SellerRevenue')
-        sellerRevenue = order.SellerRevenue(seller=partner,balance=0,withdrawn=0)
-        sellerRevenue.save()
+        have_sold_items = True
+    except:#如果沒有，就顯示沒有紀錄
+        message='您尚無任何銷售紀錄'
+        have_sold_items = False
         # sellerRevenue = oscar.SellerRevenue.objects.get(seller = partner)
 
 
-    totalRevenue = 0 #個人銷售總額 要另外計算的
-    withdrawn = sellerRevenue.withdrawn
+    # totalRevenue = 0 #個人銷售總額 要另外計算的
+    # withdrawn = sellerRevenue.withdrawn
 
-    # 計算個人銷售總額(totalRevenue)
-    for line in orders_line:
-        totalRevenue += line.line_price_incl_tax
-        # print(line.line_price_incl_tax)
+    # # 計算個人銷售總額(totalRevenue)
+    # for line in orders_line:
+    #     totalRevenue += line.line_price_incl_tax
+    #     # print(line.line_price_incl_tax)
 
-    #計算餘額
-    balance = totalRevenue - withdrawn
+    # #計算餘額
+    # balance = totalRevenue - withdrawn
 
-    #存回去SellerRevenue
-    sellerRevenue.balance = balance
-    sellerRevenue.withdrawn = withdrawn
-    sellerRevenue.totalRevenue = totalRevenue
-    sellerRevenue.save()
+    # #存回去SellerRevenue
+    # sellerRevenue.balance = balance
+    # sellerRevenue.withdrawn = withdrawn
+    # sellerRevenue.totalRevenue = totalRevenue
+    # sellerRevenue.save()
     
     # print('totalRevenue',totalRevenue,'balance',balance,'withdrawn',withdrawn)
     
+
+    return render(request, template , locals())
+
+#帳戶餘額
+def sellerBanking(request):
+    page_title = ('提領帳戶餘額')
+
+    active_tab = 'seller_banking'
+    template = 'oscar/customer/seller_sold_items/seller_banking.html'
+    user = request.user
+    partner = oscar_partner.Partner.objects.get(name=user)
+    orders_line = order.Line.objects.filter(partner=partner)
+
+    try:#看看sellerRevenue是不是有這位賣家的資料
+        sellerRevenue = order.SellerRevenue.objects.get(seller=partner)
+        have_revenue_record = True
+    except:#如果沒有，就顯示沒有紀錄
+        totalRevenue = 0
+        balance = 0
+        withdrawn = 0
+        have_revenue_record = False
+
+    return render(request, template , locals())
+    
+def sellerBankingWithdraw(request):
+    page_title = ('提領帳戶餘額')
+    active_tab = 'seller_banking_withdraw'
+    template = 'oscar/customer/seller_sold_items/seller_banking_withdraw.html'
+    
+    username = request.user
+    partner = oscar_partner.Partner.objects.get(name=username)
+    orders_line = order.Line.objects.filter(partner=partner)
+    try:#看看bank account是不是有這位賣家的資料，有就叫他確認
+        user_bank_account = seller_model.SellerBankAccount.objects.get(seller=partner)
+        account_info_completed = True
+        message = '請確認以下匯款帳戶資訊是否正確'
+        bank_code = user_bank_account.bank_code
+        bank_name = user_bank_account.bank_name
+        bank_account = user_bank_account.bank_account
+
+    except:#如果沒有，就叫他填
+        account_info_completed = False
+        message = '您尚未填寫帳戶相關資訊，敬請協助填寫帳戶相關資料，以利作業'
+
+
+    return render(request, template , locals())
+
+def sellerBankingEdit(request):
+    #修改帳戶資訊
+    page_title = ('提領帳戶餘額')
+    active_tab = 'seller_banking_withdraw'
+    template = 'oscar/customer/seller_sold_items/seller_banking_edit.html'
+    username = request.user
+    partner = oscar_partner.Partner.objects.get(name=username)
+    orders_line = order.Line.objects.filter(partner=partner)
+    try:#看看bank account是不是有這位賣家的資料，有就叫他確認
+        user_bank_account = seller_model.SellerBankAccount.objects.get(seller=partner)
+        # account_info_completed = True
+        # message = '請確認以下匯款帳戶資訊是否正確'
+        bank_code = user_bank_account.bank_code
+        bank_name = user_bank_account.bank_name
+        bank_account = user_bank_account.bank_account
+
+    except:#如果沒有，就叫他填
+        account_info_completed = False
+        print('為啥有bug????')
+        # message = '您尚未填寫帳戶相關資訊，敬請協助填寫帳戶相關資料，以利作業'
+
+    return render(request, template , locals())
+
+
+def sellerBankingWithdrawProcess(request):
+    page_title = ('提領帳戶餘額')
+    active_tab = 'seller_banking_withdraw'
+    template = 'oscar/customer/seller_sold_items/seller_banking_withdraw_process_result.html'
+    username = request.user
+    partner = oscar_partner.Partner.objects.get(name=username)    
+    
+    # 新增帳戶資訊
+    what_to_be_processed = request.POST['what_to_be_process']
+
+    if what_to_be_processed == 'new_account_info':  
+        # 新增到SellerBankAccount
+        bank_code = request.POST['bank_code']   
+        bank_name = request.POST['bank_name']   
+        bank_account = request.POST['bank_account']   
+        seller_bank_item = seller_model.SellerBankAccount(seller=partner,bank_code=bank_code,bank_name=bank_name,bank_account=bank_account)
+        seller_bank_item.save()
+
+        #新增到SellerWithdrawRecord
+        seller_withdraw_record = seller_model.SellerWithdrawRecord(seller=partner, submit_date=timezone.now(),status='submited')
+        seller_withdraw_record.save()
+
+        message='成功儲存帳戶資訊並送出提款申請!'
+
+    elif what_to_be_processed == 'exist_account_info':
+        seller_withdraw_record = seller_model.SellerWithdrawRecord(seller=partner, submit_date=timezone.now(),status='submited')
+        seller_withdraw_record.save()
+        message='成功送出提款申請!'
+        print('exist_account_info')
+    
+    elif what_to_be_processed == 'edit_account_info':
+         # 新增到SellerBankAccount
+        seller_bank_item = seller_model.SellerBankAccount.objects.get(seller=partner)
+        bank_code = request.POST['bank_code']   
+        seller_bank_item.bank_code = bank_code  
+        seller_bank_item.bank_name = request.POST['bank_name']   
+        seller_bank_item.bank_account = request.POST['bank_account']   
+        seller_bank_item.save()
+
+        #新增到SellerWithdrawRecord
+        seller_withdraw_record = seller_model.SellerWithdrawRecord(seller=partner, submit_date=timezone.now(),status='submited')
+        seller_withdraw_record.save()
+
+        message='成功儲存帳戶資訊並送出提款申請!'
+
+
+        print('edit bank info')
+    
+
+   #看種類然後看是要新增資料>確認正確(要可以回到上一步)>送出申請 還是 就直接完成申請
 
     return render(request, template , locals())
 
@@ -255,7 +384,7 @@ def reviseApplicationOrSellingItem(request):
     revising_item_info_list = request.POST[radio_name].split(',') #uid #color_ch #size # wishing_price
     uniqlo_id = revising_item_info_list[0]
 
-    item = catalogue.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
+    item = catalogue_model.UNIQLOItem.objects.get(UNIQLOID=uniqlo_id)
     uniqlo_title = item.UNIQLOTitle
     original_price = item.OriginalPrice
     color_dict={}
@@ -266,7 +395,7 @@ def reviseApplicationOrSellingItem(request):
     size = revising_item_info_list[2]
     wishing_price = revising_item_info_list[3]
 
-    all_items_of_this_user = catalogue.Application_Records.objects.filter(username=username)
+    all_items_of_this_user = catalogue_model.Application_Records.objects.filter(username=username)
     items_uid_filtered = all_items_of_this_user.filter(UNIQLOID=uniqlo_id)
     items_uid_size_filtered = items_uid_filtered.filter(size=size)
     items_uid_size_color_filtered = items_uid_size_filtered.filter(color_code=color_code)
@@ -299,7 +428,7 @@ def saveChange(request):
         targeted_item_to_be_edited = targeted_item_to_be_edited.get(size=original_size)
         targeted_item_to_be_edited.color_code = color_code
 
-        color_item = catalogue.color.objects.get(color_code=color_code)
+        color_item = catalogue_model.color.objects.get(color_code=color_code)
         color_name_ch = color_item.color_name_ch
         color_name_eng = color_item.color_name
 
@@ -314,8 +443,8 @@ def saveChange(request):
         wishing_price = request.POST['wishing_price']
         upc_name = str(username)+'-'+str(uniqlo_id)+'-'+str(original_color_code)+'-'+str(original_size)
         print(' upc_name',upc_name)
-        targeted_item_to_be_edited_1 = catalogue.Product.objects.get(upc = upc_name)
-        targeted_item_to_be_edited_2 = catalogue.Application_Records.objects.filter(username=username)
+        targeted_item_to_be_edited_1 = catalogue_model.Product.objects.get(upc = upc_name)
+        targeted_item_to_be_edited_2 = catalogue_model.Application_Records.objects.filter(username=username)
         targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.filter(UNIQLOID=uniqlo_id)
         targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.filter(color_code=original_color_code)
         targeted_item_to_be_edited_2= targeted_item_to_be_edited_2.filter(wishing_price=original_wishing_price)
@@ -348,7 +477,7 @@ def saveChange(request):
     return render(request, template_name , locals())
 
 def collectInfo(request):
-    UQItems = catalogue.UNIQLOItem.objects.all()
+    UQItems = catalogue_model.UNIQLOItem.objects.all()
     UQItem_list = list()
     for _, UQItem in enumerate(UQItems):
         UQItem_list.append("{}".format(str(UQItem) + "<br>"))
@@ -428,7 +557,7 @@ class GoodsInfoCollector:
 
     def search(self):
 
-        num_exists = catalogue.UNIQLOItem.objects.filter(
+        num_exists = catalogue_model.UNIQLOItem.objects.filter(
             UNIQLOID=self.serialNumber)
         if num_exists.exists():
             print(self.serialNumber, self.title, '已经存在，不需要進行爬蟲')
@@ -617,14 +746,14 @@ class GoodsInfoCollector:
     # 將爬到的資料寫進資料庫
     def save(self):
 
-        order_exists = catalogue.UNIQLOItem.objects.filter(
+        order_exists = catalogue_model.UNIQLOItem.objects.filter(
             UNIQLOID=self.serialNumber)
         if order_exists.exists():
             print(self.serialNumber, self.title, '已经存在')
             # ，现在更新数据，更新的数据id：',order_exists.last().id)
         else:
 
-            unit = catalogue.UNIQLOItem.objects.create(
+            unit = catalogue_model.UNIQLOItem.objects.create(
                 UNIQLOID=self.serialNumber,
                 UNIQLOTitle=self.title,
                 OriginalPrice=self.price,

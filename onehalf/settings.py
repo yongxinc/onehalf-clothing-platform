@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 from oscar.defaults import *
+from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,11 +32,26 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+OSCAR_DASHBOARD_NAVIGATION += [
+    {
+        'label':_('Seller Manager'),
+        'icon':'icon-map-marker',
+        'children':[
+            {
+                'label':_('會員餘額提領管理'),
+                'url_name':'seller:seller-list',
+                'access_fn':lambda user, url_name, url_args, url_kwargs: user.is_staff,
+            },
+             
+        ]
+    },
+]
 
 # Application definition
 
 INSTALLED_APPS = [
     'mainsite',
+    'mainsite.seller.apps.SellerConfig', #dashboard的seller meni item
     # official tutorial core applications
     'mainsite.catalogue.apps.CatalogueConfig',
     'mainsite.order.apps.OrderConfig',
@@ -43,6 +59,7 @@ INSTALLED_APPS = [
     # official tutorial dashboard applications
     'mainsite.dashboard.apps.DashboardConfig',
     'mainsite.basket.apps.BasketConfig',
+    'mainsite.checkout.checkout.apps.CheckoutConfig',
     # 'mainsite.partner.apps.PartnerConfig',
 
     # 'mainsite.dashboard.orders.apps.OrdersDashboardConfig',
@@ -63,7 +80,8 @@ INSTALLED_APPS = [
 
     'oscar.config.Shop',
     'oscar.apps.analytics.apps.AnalyticsConfig',
-    'oscar.apps.checkout.apps.CheckoutConfig',
+    # 'oscar.apps.checkout.apps.CheckoutConfig',
+    
     'oscar.apps.address.apps.AddressConfig',
     'oscar.apps.shipping.apps.ShippingConfig',
     # 'oscar.apps.catalogue.apps.CatalogueConfig',

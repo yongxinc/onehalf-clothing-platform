@@ -1,8 +1,9 @@
 from django.urls import include, path
+from django.conf.urls import url
 from django.contrib import admin
 from django.apps import apps
 from django.conf.urls.static import static
-
+from mainsite.seller.views import SellerListView
 from mainsite import views
 
 
@@ -25,6 +26,13 @@ urlpatterns = [
     path('accounts/seller-sold_items',views.sellerSoldItem),
     path('accounts/revise_apply',views.reviseApplicationOrSellingItem),
     path('accounts/seller-save-change',views.saveChange),
+    path('accounts/seller-banking',views.sellerBanking),
+    path('accounts/seller-banking-withdraw',views.sellerBankingWithdraw),
+    path('accounts/seller-banking-edit',views.sellerBankingEdit),
+    path('accounts/seller-banking-withdraw-sent',views.sellerBankingWithdrawProcess),
+
+    path('dashboard/seller/',include('mainsite.seller.urls',namespace="seller")),
+    
     # path('accounts/revise_selling_items',views.reviseSellingItem),
     
 

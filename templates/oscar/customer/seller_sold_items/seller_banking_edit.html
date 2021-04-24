@@ -1,0 +1,20 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+{% load custom_tags %}
+
+{% block content %}
+<form name='bank-info-submit' action='/accounts/seller-banking-withdraw-sent' method='POST'>
+    {% csrf_token %}
+  
+    <label>銀行代碼：</label>
+    <input name=bank_code id=bank_code value={{ bank_code }} > <br>
+    <label>銀行及分行名稱：</label>
+    <input name=bank_name id=bank_name  value={{ bank_name }} > <br>
+    <label>帳號：</label>
+    <input name=bank_account id=bank_account value={{ bank_account }} >
+<br><br>
+    <input type='submit' class="btn btn-success" value='是，我已修改完帳戶資訊，要送出提領申請'>        
+    <input type='reset' class="btn btn-light" value='清除重填'>
+    <input type="hidden" id="what_to_be_process" name="what_to_be_process" value='edit_account_info'>
+
+</form>
+{% endblock  %}

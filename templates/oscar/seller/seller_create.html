@@ -1,0 +1,48 @@
+{% extends 'oscar/dashboard/layout.html' %}
+
+{% load i18n %}
+{% load render_table from django_tables2 %}
+
+{% block title %}
+    {% trans "Categories" %} | {{ block.super }}
+{% endblock %}
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Seller Manager
+            </li>
+        </ol>
+    </nav>
+{% endblock %}
+
+
+{% block header %}
+            <div class="page-header">
+                <h1>{% block headertext %}<b>會員餘額提領管理-新增</b>{% endblock %}</h1>
+            </div>
+            <br>
+{% endblock %}
+
+{% block content%}
+
+<div class="row">
+    <div class="col">
+       
+            <form action="create" method="POST">
+             {% csrf_token %}
+            <table>
+            {{ form }}
+             </table>
+            <input type="submit" class="btn btn-primary" value="儲存">
+            </form>
+    </div>
+</div>
+<br><br>
+
+{% endblock %}
+
+
