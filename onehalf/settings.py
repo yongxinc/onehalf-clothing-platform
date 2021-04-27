@@ -135,7 +135,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    # 'whitenoise.storage.CompressedManifestStaticFilesStorage', #whitenose
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'oscar.apps.basket.middleware.BasketMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
@@ -240,5 +241,5 @@ EMAIL_HOST_PASSWORD = 'ekcfdkjfqxvgmxec'  # Gmail應用程式的密碼
 
 
 #HEROKU
-ALLOWED_HOST = ['127.0.0.1','https://onehalf-clothing.herokuapp.com/']
+ALLOWED_HOST = ['127.0.0.1','onehalf-clothing.herokuapp.com/']
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
