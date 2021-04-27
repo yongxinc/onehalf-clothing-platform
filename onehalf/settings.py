@@ -42,6 +42,11 @@ OSCAR_DASHBOARD_NAVIGATION += [
                 'url_name':'seller:seller-list',
                 'access_fn':lambda user, url_name, url_args, url_kwargs: user.is_staff,
             },
+            {
+                'label':_('上架申請管理'),
+                'url_name':'seller:seller-application-list',##改url 
+                'access_fn':lambda user, url_name, url_args, url_kwargs: user.is_staff,
+            },
              
         ]
     },

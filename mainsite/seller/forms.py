@@ -1,6 +1,7 @@
 from django import forms
 from mainsite.order.models import SellerRevenue
 from .models import SellerBankAccount, SellerWithdrawRecord
+from mainsite.catalogue.models import Application_Records #之後移到seller裡面
 
 
 class SellerRevenueForm(forms.ModelForm):
@@ -34,3 +35,15 @@ class SellerWithdrawRecordForm(forms.ModelForm):
 #             'bank_account':'帳號',
 
 #         }
+# 
+# Application_Records
+
+class ApplicationRecordForm(forms.ModelForm):
+
+    class Meta:
+        model = Application_Records
+        fields = '__all__'
+        labels = {
+            'username': '使用者名稱',
+        }
+        

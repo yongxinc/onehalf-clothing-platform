@@ -221,6 +221,7 @@ def sellerSoldItem(request):
     # Update seller revenue資料(?)
     
     
+    
     try:#看看sellerRevenue是不是有這位賣家的資料
         sellerRevenue = order.SellerRevenue.objects.get(seller=partner)
         have_sold_items = True

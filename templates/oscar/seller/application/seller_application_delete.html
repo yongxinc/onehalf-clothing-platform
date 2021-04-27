@@ -22,7 +22,7 @@
 
 {% block header %}
             <div class="page-header">
-                <h1>{% block headertext %}<b>您正在刪除 {{ object.seller }} 的相關餘額提領紀錄！</b>{% endblock %}</h1>
+                <h1>{% block headertext %}<b>您正在刪除 {{ object.username }} 的上架申請！</b>{% endblock %}</h1>
                 
             </div>
           
@@ -30,13 +30,13 @@
 
 {% block content%}
 
-是否確定刪除{{ object.seller }}的相關餘額提領紀錄?
+是否確定刪除{{ object.username }}的上架申請?
 <br />
 <br />
 <form action="" method="POST">
     {% csrf_token %}
     <input class="btn btn-primary" type="submit" value="是的，我要刪除" />
-    <a class="btn btn-warning" href="{% url 'seller:seller-list' %}">否，我要取消</a>
+    <a class="btn btn-warning" href="{% url 'seller:seller-application-list' %}">否，我要取消</a>
 </form>
 
 {% endblock %}

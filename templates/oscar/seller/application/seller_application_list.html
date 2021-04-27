@@ -27,45 +27,49 @@
 
 {% block header %}
             <div class="page-header">
-                <h1>{% block headertext %}<b>會員餘額提領管理</b>{% endblock %}</h1>
+                <h1>{% block headertext %}<b>上架申請管理</b>{% endblock %}</h1>
             </div>
             <br>
 {% endblock %}
 
 {% block content%}
 
+
+
+
+
 <table class="table">
     <thead>
         <tr>
             <th>賣家</th>
-            <th>申請日期</th>
-            <th>完成轉帳日期</th>
             <th>狀態</th>
-            <th>修改領款紀錄</th>
-            <th>修改餘額金額</th>
-            <th>刪除</th>
-
+            <th>商品序號</th>
+            <th>品名</th>
+    
         </tr>
     </thead>
     <tbody>
         {% for item in object_list %}
         <tr>
-            <td>{{ item.seller }}</td>
-            <td>{{ item.submit_date }}</td>
-            <td>{{ item.transfered_date }}</td>
+            <td>{{ item.username }}</td>
             <td>{{ item.status }}</td>
-            <td><a href="{% url 'seller:seller-update-withdraw' item.id %}" class="btn btn-success">修改領款紀錄</a></td>
-            <td><a href="{% url 'seller:seller-update-revenue' item.id %}" class="btn btn-success">修改餘額紀錄</a></td>
-            <td><a href="{% url 'seller:seller-delete' item.id %}" class="btn btn-success">刪除</a></td>
+            <td>{{ item.UNIQLOID }}</td>
+            <td>{{ item.title }}</td>
+            <td><a href="{% url 'seller:seller-update-application' item.id %}" class="btn btn-success">修改此申請紀錄</a></td>
+            <td><a href="{% url 'seller:seller-delete-application' item.id %}" class="btn btn-success">刪除</a></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<td><a href="{% url 'seller:seller-create'%}" class="btn btn-success">手動新增一筆資料</a></td>
-<hr>
-
 
 
 {% endblock %}
+
+
+
+
+
+
+
 
 

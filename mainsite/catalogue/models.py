@@ -100,6 +100,7 @@ class Application_Records(models.Model):
     ('package_received', '平台已收到賣家寄來的商品，審查中'),
     ('on_selling', '已上架'),)
     username = models.CharField(max_length=30)
+    
     status = models.CharField(max_length=100,choices=STATUS_CHOICES,default='default')
     UNIQLOID = models.CharField(max_length=20,default='')
     title = models.CharField(max_length=50,default='')
@@ -111,11 +112,11 @@ class Application_Records(models.Model):
     quantity = models.IntegerField(default=0)
     add_date = models.DateTimeField('儲存日期',default = timezone.now())
     mod_date = models.DateTimeField('最後修改日期', auto_now = True)
-    instock_date = models.DateTimeField('上架日期', default = timezone.now())
+    instock_date = models.DateTimeField('上架日期', default = timezone.now(),null=True, blank=True)
     product = models.ForeignKey('product',on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.username + ' | ' +self.UNIQLOID +  ' | ' +self.title +  ' | '+ self.status  +  ' | '+ '儲存日期 ' +str(self.add_date.date()) + ' | 最後修改時間 ' + str(self.mod_date.date()) + str(self.instock_date.date())
+        return self.username + ' | ' +self.UNIQLOID +  ' | ' +self.title +  ' | '+ self.status  +  ' | '+ '儲存日期 ' +str(self.add_date.date()) + ' | 最後修改時間 ' + str(self.mod_date.date())
     class Meta:
         ordering = ['username', 'UNIQLOID']
 
