@@ -219,7 +219,7 @@ def sellerSoldItem(request):
     
     
     try:#看看sellerRevenue是不是有這位賣家的資料
-         partner = oscar_partner.Partner.objects.get(name=user)
+        partner = oscar_partner.Partner.objects.get(name=user)
         orders_line = order.Line.objects.filter(partner=partner)
         sellerRevenue = order.SellerRevenue.objects.get(seller=partner)
         have_sold_items = True
