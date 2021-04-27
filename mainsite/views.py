@@ -260,10 +260,9 @@ def sellerBanking(request):
     active_tab = 'seller_banking'
     template = 'oscar/customer/seller_sold_items/seller_banking.html'
     user = request.user
-    partner = oscar_partner.Partner.objects.get(name=user)
-    orders_line = order.Line.objects.filter(partner=partner)
-
-    try:#看看sellerRevenue是不是有這位賣家的資料
+    try:
+        partner = oscar_partner.Partner.objects.get(name=user)
+        orders_line = order.Line.objects.filter(partner=partner)
         sellerRevenue = order.SellerRevenue.objects.get(seller=partner)
         have_revenue_record = True
     except:#如果沒有，就顯示沒有紀錄
