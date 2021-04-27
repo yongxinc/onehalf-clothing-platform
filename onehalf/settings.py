@@ -241,5 +241,5 @@ EMAIL_HOST_PASSWORD = 'ekcfdkjfqxvgmxec'  # Gmail應用程式的密碼
 
 
 #HEROKU
-ALLOWED_HOST = ['127.0.0.1','onehalf-clothing.herokuapp.com/']
+ALLOWED_HOST = ['127.0.0.1','onehalf-clothing.herokuapp.com']
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
