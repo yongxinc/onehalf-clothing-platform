@@ -237,3 +237,8 @@ EMAIL_PORT = 587  # TLS通訊埠號
 EMAIL_USE_TLS = True  # 開啟TLS(傳輸層安全性)
 EMAIL_HOST_USER = 'myonehalf.service@gmail.com'  # 寄件者電子郵件
 EMAIL_HOST_PASSWORD = 'ekcfdkjfqxvgmxec'  # Gmail應用程式的密碼
+
+
+#HEROKU
+ALLOWED_HOST = ['127.0.0.1','https://onehalfclothing.herokuapp.com/']
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
