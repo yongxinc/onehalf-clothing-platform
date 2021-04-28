@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from oscar.defaults import *
 from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse_lazy
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -243,3 +244,5 @@ EMAIL_HOST_PASSWORD = 'ekcfdkjfqxvgmxec'  # Gmail應用程式的密碼
 #HEROKU
 ALLOWED_HOSTS = ['127.0.0.1','onehalf-clothing.herokuapp.com']
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+OSCAR_HOMEPAGE = reverse_lazy('index')
+# STATICFILES_DIR = [ ]

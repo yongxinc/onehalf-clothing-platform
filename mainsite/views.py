@@ -47,6 +47,9 @@ from oscar.apps.catalogue.views import ProductDetailView as CoreProductDetailVie
 #     def mo():
 #         print(request)
 
+def index(request):
+    template_name='oscar/index.html'
+    return render(request, template_name, locals())
 
 def sellerApply(request):
 

@@ -12,13 +12,9 @@ from django.conf import settings
 app_name = 'mainsite'
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
-
-
-
     path('admin/', admin.site.urls),
-
-    path('', include(apps.get_app_config('oscar').urls[0])),
-
+    path('store/', include(apps.get_app_config('oscar').urls[0])),
+    path('', views.index, name='index'),
     path('accounts/seller-apply',views.sellerApply),  # 賣家申請畫面
     path('accounts/seller-apply-submit-serial-number',views.sellerApplyReceiveSerialNumber), #處理申請 step 1
     path('accounts/seller-apply-process-info',views.sellerApplyProcessInfo), #處理申請 step 2
