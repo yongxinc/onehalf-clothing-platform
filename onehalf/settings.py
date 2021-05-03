@@ -245,6 +245,9 @@ EMAIL_HOST_PASSWORD = 'ekcfdkjfqxvgmxec'  # Gmail應用程式的密碼
 ALLOWED_HOSTS = ['127.0.0.1','onehalf-clothing.herokuapp.com','myonehalf.herokuapp.com']
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
-
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 OSCAR_HOMEPAGE = reverse_lazy('index')
 # STATICFILES_DIR = [ ]
