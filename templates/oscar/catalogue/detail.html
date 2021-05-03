@@ -74,13 +74,13 @@
             {% block product_description %}
                 {% if product.description %}
                     <div id="product_description" class="sub-header">
-                        <!-- <h2>{% trans "Product Description" %}</h2> -->
+                        <h2>{% trans "Product Description" %}</h2>
                     </div>
                     
                     <small><p>{{ product.description|safe }}</p></small>
                 {% endif %}
             {% endblock %}
-<!-- 
+        <!-- 
             {% iffeature "reviews" %}
                 {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
             {% endiffeature %} -->
@@ -160,7 +160,7 @@
         <tr>
             <th>尺寸表</th><td>
                 <a href="http://www.uniqlo.com/tw/store/support/size/{{product.parent.upc}}_size.html" target="_new">
-                    <img src=https://cdn3.iconfinder.com/data/icons/clothes-size/635/2-512.png width=50 length=50>
+                    <img src=https://cdn3.iconfinder.com/data/icons/clothes-size/635/2-512.png style="width:50px;height:20px;">
                 </a><small>(點擊開啟新視窗)</small></td>
         </tr>
         {% endif %}
@@ -168,7 +168,7 @@
         <tr>
             <th>尺寸表</th><td>
                 <a href="http://www.uniqlo.com/tw/store/support/size/{{product.upc}}_size.html" target="_new">
-                    <img src=https://cdn3.iconfinder.com/data/icons/clothes-size/635/2-512.png width=50 length=50>
+                    <img src=https://cdn3.iconfinder.com/data/icons/clothes-size/635/2-512.png style="width:50px;height:20px;">
                 </a><small>(點擊開啟新視窗)</small></td>
         </tr>
         {% endif %}

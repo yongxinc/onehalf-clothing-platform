@@ -1,4 +1,61 @@
+{% extends "oscar/layout.html" %}
 {% load static %}
+
+{% load basket_tags %}
+{% load category_tags %}
+{% load product_tags %}
+{% load i18n %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
+{% endblock %}
+
+
+{% block title %}
+    {% if summary %}{{ summary }} |{% endif %} {{ block.super }}
+{% endblock %}
+
+{% block headertext %}{{ summary }}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="banner"><img src='https://i.ibb.co/LRdFG4q/image.png' style="width:100%;height:100%;"></div><!-- [img]新上市 全館免運 -->
+	<!-- <div class="col"><div class="banner"><img src='https://upload.cc/i1/2021/05/03/Ua9Q5E.png'></div></div> -->
+	<div class="banner"><img src='https://i.ibb.co/cyDQTJF/find-your-style-with-one-half.png' style="width:100%;height:100%;"></div>
+
+{% endblock content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.search.init();
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!doctype html>
 
 <html>
@@ -27,17 +84,21 @@
 	<link href="images/lo.png" rel="shortcut icon"/>
 	<!-- title旁小圖示-->
 	<title> UNIQLO二手衣商城</title>
-	<link rel="stylesheet" type="text/css" href="{% static 'oscar/css/index_styles.css' %}">
+	<!-- <link rel="stylesheet" type="text/css" href="{% static 'oscar/css/index_styles.css' %}"> -->
+	<link rel="stylesheet" type="text/css" href="{% static 'oscar/css/styles.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'oscar/css/mobile.css' %}" media="screen and (max-width : 568px)" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 	<script type="text/javascript" src="{% static 'oscar/js/oscar/mobile.js' %}"></script>
 </head>
 
 <body>
+	
+
 <div id="header">
 	<a href="/store/catalogue/" class="logo"><div class="icon"><img src="https://upload.cc/i1/2021/05/03/eIKzDJ.png" alt=""></div></a>
   	<ul id="navigation">
-		<li class="selected">
+		<!-- <li class="selected"> -->
+		<li>
 			<a href="/store/catalogue/">所有商品</a>
 		</li>
 		<li>
@@ -57,11 +118,11 @@
 
 
 <div id="body">
-	<div class="row">
-		<div class="col"><img src='https://upload.cc/i1/2021/05/03/8wO2Fj.png'></div><!-- [img]介紹 -->
-	<div class="row">
-		<div class="col"><div class="banner"><img src='https://upload.cc/i1/2021/05/02/NvT0Ka.png'></div></div><!-- [img]新上市 全館免運 -->
 	
+	<div class="row">
+		<div class="col"><div class="banner"><img src='https://upload.cc/i1/2021/05/03/ODbanK.png'></div></div><!-- [img]新上市 全館免運 -->
+		<!-- <div class="col"><div class="banner"><img src='https://upload.cc/i1/2021/05/03/Ua9Q5E.png'></div></div> -->
+		<div class="col"><div class="banner"><img src='https://upload.cc/i1/2021/05/03/38nbBd.png'></div></div>
 </div>
 
 

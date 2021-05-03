@@ -13,7 +13,7 @@
         {% csrf_token %}
         <!-- 這行負責尺寸選項那塊 -->
         {% include "oscar/partials/form_fields.html" with form=basket_form %}
-        <button type="submit" class="btn btn-lg btn-primary w-100" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
+        <button type="submit" class="btn btn-lg btn-info w-60" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
         <!-- <button type="submit"  value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button> -->
 
     </form>
@@ -32,6 +32,6 @@
         </form>
     {% endif %}
     {% iffeature "wishlists" %}
-        {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
+        <!-- {% include "oscar/catalogue/partials/add_to_wishlist.html" %} -->
     {% endiffeature %}
 {% endif %}

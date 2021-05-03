@@ -29,10 +29,12 @@
 
     {% block navbar_collapse %}
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            
+            
             {% block nav %}
                 <ul class="navbar-nav mr-auto">
                     {% block nav_items %}
-                        <li class="nav-item dropdown">
+                        <!-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% block browse_store_text %}{% trans "Browse store" %}{% endblock %}
                             </a>
@@ -50,14 +52,22 @@
                                     <a class="dropdown-item" href="{% url 'offer:list' %}">{% trans "Offers" %}</a>
                                 {% endblock %}
                             </div>
-                        </li>
+                        </li> -->
+                        <a class="nav-link" style="color:rgb(68, 70, 47);" href="{% url 'catalogue:index' %}">ALL</a>
+                        <!-- <a class="nav-link" style="color:rgb(68, 70, 47);" href="{% url 'catalogue:index' %}">所有商品</a> -->
+                        {% for tree_category in tree_categories %}
+                                <a class="nav-link" style="color:rgb(68, 70, 47);" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                        {% endfor %}
+                        <!-- <a class="nav-link" style="color:rgb(68, 70, 47);" href="https://onehalf-clothing.herokuapp.com/store/catalogue/category/u4e0au8863_1/">TOP</a>
+                        <a class="nav-link" style="color:rgb(68, 70, 47);" href="https://onehalf-clothing.herokuapp.com/store/catalogue/category/u8932u5b50_4/">BOTTOM</a>
+                        <a class="nav-link" style="color:rgb(68, 70, 47);" href="https://onehalf-clothing.herokuapp.com/store/catalogue/category/u5916u5957_5/">OUTER</a> -->
                    {% endblock %}
                </ul>
             {% endblock %}
-
             {% block nav_extra %}
-                {% include "oscar/partials/search.html" %}
-            {% endblock %}
+            {% include "oscar/partials/search.html" %}
+        {% endblock %}
+            
         </div>
     {% endblock %}
 </nav>
