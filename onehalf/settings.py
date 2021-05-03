@@ -219,7 +219,7 @@ USE_L10N = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.EmailBackend',
@@ -243,6 +243,8 @@ EMAIL_HOST_PASSWORD = 'ekcfdkjfqxvgmxec'  # Gmail應用程式的密碼
 
 #HEROKU
 ALLOWED_HOSTS = ['127.0.0.1','onehalf-clothing.herokuapp.com','myonehalf.herokuapp.com']
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = '/static/'
+
 OSCAR_HOMEPAGE = reverse_lazy('index')
 # STATICFILES_DIR = [ ]
