@@ -14,6 +14,8 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
     path('store/', include(apps.get_app_config('oscar').urls[0])),
+    path('accounts/login', include(apps.get_app_config('oscar').urls[0])),
+    path('accounts/profile/',include(apps.get_app_config('oscar').urls[0])),
     path('', views.index, name='index'),
     path('accounts/seller-apply',views.sellerApply),  # 賣家申請畫面
     path('accounts/seller-apply-submit-serial-number',views.sellerApplyReceiveSerialNumber), #處理申請 step 1
