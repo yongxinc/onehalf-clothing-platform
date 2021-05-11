@@ -422,7 +422,7 @@ def saveChange(request):
         size = request.POST['size_radio_btn']
         quantity = request.POST['quantity']
         wishing_price = request.POST['wishing_price']
-        targeted_item_to_be_edited = catalogue.Application_Records.objects.filter(username=username)
+        targeted_item_to_be_edited = catalogue_model.Application_Records.objects.filter(username=username)
         targeted_item_to_be_edited = targeted_item_to_be_edited.filter(UNIQLOID=uniqlo_id)
         targeted_item_to_be_edited = targeted_item_to_be_edited.filter(color_code=original_color_code)
         targeted_item_to_be_edited = targeted_item_to_be_edited.filter(wishing_price=original_wishing_price)
