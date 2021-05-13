@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from mainsite.seller.views import (
     SellerListView, SellerCreateView, SellerDeleteView, 
     SellerUpdateRevenueView, SellerUpdateWithdrawView, SellerApplicationListView,SellerUpdateApplicationView,
-    SellerApplicationDeleteView)
+    SellerApplicationDeleteView, UqitemsListView)
 from mainsite import views
 
 app_name = 'seller'
@@ -20,5 +20,7 @@ path('delete/<int:pk>', SellerDeleteView.as_view(), name='seller-delete'),
 path('application-list', SellerApplicationListView.as_view(), name='seller-application-list'),
 path('update-application/<int:pk>', SellerUpdateApplicationView.as_view(), name='seller-update-application'),
 path('delete-applition/<int:pk>', SellerApplicationDeleteView.as_view(), name='seller-delete-application'),
+
+path('uqitems-list', UqitemsListView.as_view(), name='seller-uqitems'),
 
 ]

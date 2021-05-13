@@ -183,7 +183,7 @@ def sellerApplyRecords(request):
     template_name = 'oscar/customer/application/records.html' 
     page_title = ('上架申請查詢')
     active_tab = 'application-records'
-    homepage_url='https://myonehalf.herokuapp.com'
+    homepage_url='https://onehalf-clothing.herokuapp.com'
     user = request.user #會員名稱
 
     all_records = catalogue_model.Application_Records.objects.filter(username=request.user) #取得該會員的相關申請紀錄
@@ -442,7 +442,7 @@ def saveChange(request):
 
     if what_to_be_revised == 'selling_item':
         wishing_price = request.POST['wishing_price']
-        upc_name = str(username)+'-'+str(uniqlo_id)+'-'+str(original_color_code)+'-'+str(original_size)
+        upc_name = str(username)+'－'+str(uniqlo_id)+'－'+str(original_color_code)+'－'+str(original_size)
         print(' upc_name',upc_name)
         targeted_item_to_be_edited_1 = catalogue_model.Product.objects.get(upc = upc_name)
         targeted_item_to_be_edited_2 = catalogue_model.Application_Records.objects.filter(username=username)

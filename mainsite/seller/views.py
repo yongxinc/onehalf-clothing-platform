@@ -11,11 +11,15 @@ from .forms import SellerRevenueForm, SellerWithdrawRecordForm, ApplicationRecor
 # from oscar.apps.partner.models import StockRecord
 from mainsite.order.models import SellerRevenue #之後移到seller裡面
 from mainsite.catalogue.models import Application_Records #之後移到seller裡面
+from mainsite.catalogue.models import UNIQLOItem
 from .models import SellerWithdrawRecord
 from django.http import HttpResponse
 
+class UqitemsListView(ListView):
+    model = UNIQLOItem
+    template_name= 'oscar/seller/uqitems/uqitems_list.html'
+    
 
-# class SellerListView(TemplateView):
 class SellerListView(ListView):
     model = SellerWithdrawRecord
     template_name= 'oscar/seller/seller_list.html'
