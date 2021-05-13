@@ -183,7 +183,7 @@ def sellerApplyRecords(request):
     template_name = 'oscar/customer/application/records.html' 
     page_title = ('上架申請查詢')
     active_tab = 'application-records'
-    homepage_url='https://onehalf-clothing.herokuapp.com'
+    homepage_url='https://myonehalf.herokuapp.com'
     user = request.user #會員名稱
 
     all_records = catalogue_model.Application_Records.objects.filter(username=request.user) #取得該會員的相關申請紀錄
