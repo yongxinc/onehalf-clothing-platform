@@ -4,6 +4,7 @@
 {% block content %}
 
 <br><small>
+    
 <b>您可以在此查詢已送出之申請狀態，寄出商品時煩請您留意以下幾點注意事項：</b>
 <li>本平台僅接受<b>9成新</b>以上之UNIQLO衣物</li>
 <li>若商品不符規格將通知您，請您<b>自費退回</b></li>
@@ -32,41 +33,44 @@
     {% csrf_token %}
     <input type='hidden' name ='what_to_be_revised' value='application_submited'>
 <hr>
-<table style="padding:3px;" rules="all" cellpadding='8'; >
-<thead>
-    <th>新增日期</th>
-    <th>商品圖片</th>
-    <th>商品序號</th>
-    <th>商品名稱</th>
-    <th>顏色</th>
-    <th>數量</th>
-    <th>尺寸</th>
-    <th>欲售價格</th>
-  </thead>
-<tbody>
-{% for record in records_application_submited %}
+<div class="divScroll">
+    <table style="padding:3px;" rules="all" cellpadding='8'; >
+    <thead>
+        <th>新增日期</th>
+        <th>商品圖片</th>
+        <th>商品序號</th>
+        <th>商品名稱</th>
+        <th>顏色</th>
+        <th>數量</th>
+        <th>尺寸</th>
+        <th>欲售價格</th>
+    </thead>
+    <tbody>
+    {% for record in records_application_submited %}
 
-<tr>
-    <td style="height:65px;" align='center' valign="middle"><small>{{record.add_date.date}}</small></td>
-    <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
-    </td>
-    <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
-    
-    <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
-    <td style="height:65px;" align='center' valign="middle"><small>{{record.color_code}}<br>{{record.color_name_ch}}</small></td> 
-    <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
-    <td style="height:65px;" align='center' valign="middle"><small>{{record.size}}</small></td>
-    <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
-    <td>
-        <input type="radio"  id="check" name="check" value="{{record.UNIQLOID}},{{record.color_code}},{{record.size}},{{record.wishing_price}}">
-        <label for="check"> 修改 </label><br>
-        </td>  
+    <tr>
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.add_date.date}}</small></td>
+        <td style="height:65px;" align='center' valign="middle"><img src=https://im.uniqlo.com/images/tw/uq/pc/goods/{{record.UNIQLOID}}/item/{{record.color_code}}_{{record.UNIQLOID}}.jpg style="width:60px;height:60px;">
+        </td>
+        <td style="height:65px;" align='center' valign="middle"> <small>{{record.UNIQLOID}}</small></td> 
+        
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.title}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.color_code}}<br>{{record.color_name_ch}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.quantity}}</small></td> 
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.size}}</small></td>
+        <td style="height:65px;" align='center' valign="middle"><small>{{record.wishing_price}}</small></td>
+        <td>
+            <input type="radio"  id="check" name="check" value="{{record.UNIQLOID}},{{record.color_code}},{{record.size}},{{record.wishing_price}}">
+            <label for="check"> 修改 </label><br>
+            </td>  
 
 
-</tr>
-{% endfor %}
-</tbody>
-</table>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+        
+</div>
 <td style="height:65px;" align='center' valign="middle"><br>
     <input type="submit" class="btn btn-primary" value="修改選取商品"></td>
 </form>
@@ -79,6 +83,7 @@
 無資料
 {% else %}
 <hr>
+<div class="divScroll">
 <table style="padding:3px;" rules="all" cellpadding='8'; >
     <thead>
         <th>商品圖片</th>
@@ -106,6 +111,7 @@
     {% endfor %}
     </tbody>
     </table>
+</div>
 {% endif %}
 <br>
 <br><br>
@@ -121,6 +127,7 @@
 <form name='revise_apply' action='/accounts/revise_apply' method='POST'>
     <input type='hidden' name ='what_to_be_revised' value='selling_item'>
     {% csrf_token %}
+    <div class="divScroll">
     <table style="padding:3px;" rules="all" cellpadding='8'; >
     <thead>
         <th>上架日期</th>
@@ -133,6 +140,7 @@
     <th>欲售價格</th>
       </thead>
     <tbody>
+       
     {% for record in records_on_selling %}
     <tr>
         <td style="height:65px;" align='center' valign="middle"><small>{{record.instock_date.date}}</small></td>
@@ -151,8 +159,10 @@
     
     </tr>
     {% endfor %}
+    
     </tbody>
     </table>
+</div>
     <td style="height:65px;" align='center' valign="middle"><br>
         <input type="submit" class="btn btn-info" value="修改選取商品"></td>
 </form>

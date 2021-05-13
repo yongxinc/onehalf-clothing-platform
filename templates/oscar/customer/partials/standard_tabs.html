@@ -27,17 +27,17 @@
 <li class="nav-item">
     <a href="{% url 'customer:email-list' %}" class="nav-link{% if active_tab == 'emails' %} active{% endif %}">信箱紀錄</a>
 </li>
-<li class="nav-item">
+<!-- <li class="nav-item">
     <a href="{% url 'customer:alerts-list' %}" class="nav-link{% if active_tab == 'alerts' %} active{% endif %}">{% trans "Product Alerts" %}</a>
 </li>
 <li class="nav-item">
     <a href="{% url 'customer:notifications-inbox' %}"
-        class="nav-link{% if active_tab == 'notifications' %} active{% endif %}">通知</a>
+        class="nav-link{% if active_tab == 'notifications' %} active{% endif %}">通知</a> -->
 </li>
 {% iffeature 'wishlists' %}
 <li class="nav-item">
     <a href="{% url 'customer:wishlists-list' %}"
-        class="nav-link{% if active_tab == 'wishlists' %} active{% endif %}">{% trans "Wish Lists" %}</a>
+        class="nav-link{% if active_tab == 'wishlists' %} active{% endif %}">願望清單</a>
 </li>
 {% endiffeature %}
 

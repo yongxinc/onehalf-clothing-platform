@@ -4,9 +4,14 @@
 <html lang="{{ LANGUAGE_CODE|default:" en-gb" }}" class="{% block html_class %}no-js{% endblock %}">
     
 <head>
-    
-   
+
     <style>
+        .divScroll {
+        overflow:scroll;
+        height:250px;
+        width:100%;
+        }
+
         h1,
         h2,
         h3,
@@ -17,6 +22,7 @@
         div {
             font-family: 微軟正黑體;
         }
+       
     </style>
     <title>{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
 

@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 #商店基本資訊
 OSCAR_SHOP_NAME = 'onehalf'
-OSCAR_SHOP_TAGLINE = 'uniqlo二手衣平台'
+OSCAR_SHOP_TAGLINE = 'uniqlo二手衣買賣平台'
 OSCAR_DEFAULT_CURRENCY = 'NTD'
 
 # Quick-start development settings - unsuitable for production
