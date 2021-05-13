@@ -29,7 +29,7 @@ OSCAR_DEFAULT_CURRENCY = 'NTD'
 SECRET_KEY = '*0z@(jtthhjt6%@2hwdz7hfu7$)e))%5!!$8bm8mtoxj=w1h(1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
