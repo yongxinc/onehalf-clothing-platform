@@ -13,6 +13,9 @@ app_name = 'mainsite'
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
+    # PayPal Express integration...
+    path(r'^checkout/paypal/', include('paypal.express.urls')),
+    # url(r'^dashboard/paypal/express/', application.urls),
     path('store/', include(apps.get_app_config('oscar').urls[0])),
     path('accounts/login', include(apps.get_app_config('oscar').urls[0])),
     path('accounts/profile/',include(apps.get_app_config('oscar').urls[0])),

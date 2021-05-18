@@ -16,11 +16,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse_lazy
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOGIN_REDIRECT_URL = '/accounts/'
+APPEND_SLASH = True
 
+# Oscar settings
+OSCAR_ALLOW_ANON_CHECKOUT = True
 #商店基本資訊
 OSCAR_SHOP_NAME = 'onehalf'
 OSCAR_SHOP_TAGLINE = 'uniqlo二手衣買賣平台'
-OSCAR_DEFAULT_CURRENCY = 'NTD'
+OSCAR_DEFAULT_CURRENCY = 'TWD'
+PAYPAL_FORCE_CURRENCY = 'TWD'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -128,6 +133,7 @@ INSTALLED_APPS = [
     'treebeard',
     'sorl.thumbnail',   # Default thumbnail backend, can be replaced
     'django_tables2',
+    'paypal'
 ]
 
 SITE_ID = 1
@@ -184,7 +190,8 @@ WSGI_APPLICATION = 'onehalf.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -250,9 +257,31 @@ EMAIL_HOST_PASSWORD = 'ekcfdkjfqxvgmxec'  # Gmail應用程式的密碼
 ALLOWED_HOSTS = ['127.0.0.1','onehalf-clothing.herokuapp.com','myonehalf.herokuapp.com']
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+MEDIA_URL = '/media/'
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 OSCAR_HOMEPAGE = reverse_lazy('index')
 # STATICFILES_DIR = [ ]
+
+# Taken from PayPal's documentation - these should always work in the sandbox
+PAYPAL_SANDBOX_MODE = True
+PAYPAL_BRAND_NAME = 'onehalf'
+PAYPAL_CALLBACK_HTTPS = False
+PAYPAL_API_VERSION = '119'
+
+# These are the standard PayPal sandbox details from the docs - but I don't
+# think you can get access to the merchant dashboard.
+PAYPAL_API_USERNAME = 'myonehalf.service_api1.gmail.com'
+PAYPAL_API_PASSWORD = 'QC5V7NYDBC7QRSSB'
+PAYPAL_API_SIGNATURE = 'A8HEX.S1JyaD7ngTztrMA8t5JqDNAsmcAzX8sq2KGJPWpWKp2dGi0Ab9'
+
+# Standard currency is TWD
+PAYPAL_CURRENCY = PAYPAL_PAYFLOW_CURRENCY = 'TWD'
+PAYPAL_PAYFLOW_DASHBOARD_FORMS = True
+
+try:
+    from integration import *  # noqa
+except ImportError:
+    pass
